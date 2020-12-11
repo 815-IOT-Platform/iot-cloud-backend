@@ -39,7 +39,7 @@ import java.util.List;
 @Slf4j
 public class MqBeanInitRunner implements CommandLineRunner {
 	@Resource
-	private IotProperties ananOpsProperties;
+	private IotProperties iotProperties;
 	@Resource
 	private MqProducerChangeListener producerChangeListener;
 	@Resource
@@ -54,7 +54,7 @@ public class MqBeanInitRunner implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-		CoordinatorRegistryCenter coordinatorRegistryCenter = RegistryCenterFactory.createCoordinatorRegistryCenter(ananOpsProperties.getZk());
+		CoordinatorRegistryCenter coordinatorRegistryCenter = RegistryCenterFactory.createCoordinatorRegistryCenter(iotProperties.getZk());
 		List<String> childrenKeys = coordinatorRegistryCenter.getChildrenKeys(GlobalConstants.ZK_REGISTRY_PRODUCER_ROOT_PATH);
 		this.initMqListener(coordinatorRegistryCenter);
 		for (final String childrenKey : childrenKeys) {

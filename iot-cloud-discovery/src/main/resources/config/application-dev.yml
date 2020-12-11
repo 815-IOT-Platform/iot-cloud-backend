@@ -3,7 +3,7 @@ spring:
     proxy-target-class: true
     auto: true
 
-ananops:
+iot-cloud:
   zk:
-    zkAddressList: iot-cloud-provider-zk:2181
+    zkAddressList: iot-cloud-zk:2181
     namespace: iot-cloud-elastic-job

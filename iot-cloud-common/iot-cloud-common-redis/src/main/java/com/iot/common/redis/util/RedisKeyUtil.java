@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * The class Redis key util.
  *
- * @author ananops.net@gmail.com
+ * @author iot.net@gmail.com
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RedisKeyUtil {
@@ -18,12 +18,12 @@ public class RedisKeyUtil {
 	/**
 	 * The constant RESET_PWD_TOKEN_KEY.
 	 */
-	private static final String RESET_PWD_TOKEN_KEY = "ananops:restPwd";
-	private static final String ACTIVE_USER = "ananops:activeUser";
-	private static final String SEND_SMS_COUNT = "ananops:sms:count";
-	private static final String SEND_EMAIL_CODE = "ananops:email:code";
-	private static final String ACCESS_TOKEN = "ananops:token:accessToken";
-	private static final String UPLOAD_FILE_SIZE = "ananops:file:upload_file_size";
+	private static final String RESET_PWD_TOKEN_KEY = "iot:restPwd";
+	private static final String ACTIVE_USER = "iot:activeUser";
+	private static final String SEND_SMS_COUNT = "iot:sms:count";
+	private static final String SEND_EMAIL_CODE = "iot:email:code";
+	private static final String ACCESS_TOKEN = "iot:token:accessToken";
+	private static final String UPLOAD_FILE_SIZE = "iot:file:upload_file_size";
 	private static final int REF_NO_MAX_LENGTH = 100;
 
 	/**

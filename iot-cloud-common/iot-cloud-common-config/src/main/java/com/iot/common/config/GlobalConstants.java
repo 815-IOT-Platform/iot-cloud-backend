@@ -5,12 +5,12 @@ package com.iot.common.config;
  */
 public class GlobalConstants {
 
-    public static final String ROOT_PREFIX = "ananops";
+    public static final String ROOT_PREFIX = "iot-cloud";
 
-    public static final String ZK_REGISTRY_ID_ROOT_PATH = "/ananops-cloud/registry/id";
-    public static final String ZK_REGISTRY_PRODUCER_ROOT_PATH = "/ananops-cloud/registry/producer";
-    public static final String ZK_REGISTRY_CONSUMER_ROOT_PATH = "/ananops-cloud/registry/consumer";
-    public static final String ZK_REGISTRY_SEQ = "/ananops-cloud/seq";
+    public static final String ZK_REGISTRY_ID_ROOT_PATH = "/iot-cloud/registry/id";
+    public static final String ZK_REGISTRY_PRODUCER_ROOT_PATH = "/iot-cloud/registry/producer";
+    public static final String ZK_REGISTRY_CONSUMER_ROOT_PATH = "/iot-cloud/registry/consumer";
+    public static final String ZK_REGISTRY_SEQ = "/iot-cloud/seq";
 
     /**
      * The class Symbol.

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ananops-dfs
+    name: iot-cloud-dfs
   profiles:
     active: dev
   devtools:

@@ -1,7 +1,7 @@
 # 日志配置
 logging:
   level:
-    com.ananops: debug
+    com.iot: debug
     org.springframework: warn
 spring:
   rabbitmq:
@@ -76,7 +76,7 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
-ananops:
+iot-cloud:
   auth:
     active-user-url: 127.0.0.1:9527/system/auth/activeUser/
 
