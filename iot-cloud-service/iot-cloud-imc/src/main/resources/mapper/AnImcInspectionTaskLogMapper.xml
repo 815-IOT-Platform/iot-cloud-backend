@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.imc.mapper.IotImcInspectionTaskLogMapper">
+    
+    <resultMap type="AnImcInspectionTaskLog" id="AnImcInspectionTaskLogResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="status"    column="status"    />
+        <result property="statusTimestamp"    column="status_timestamp"    />
+        <result property="movement"    column="movement"    />
+        <result property="os"    column="os"    />
+        <result property="browser"    column="browser"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <resultMap type="com.iot.imc.dto.TaskLogDto" id="TaskLogDto">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="statusTimestamp"    column="status_timestamp"    />
+        <result property="movement"    column="movement"    />
+        <result property="os"    column="os"    />
+        <result property="browser"    column="browser"    />
+        <result property="ipAddress"    column="ip_address"    />
+        <result property="taskName"    column="task_name"    />
+    </resultMap>
+
+    <sql id="selectAnImcInspectionTaskLogVo">
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, task_id, status, status_timestamp, movement, os, browser, ip_address, remark, company_id, company_name from an_imc_inspection_task_log
+    </sql>
+
+    <sql id="selectTaskLogDto">
+        select ${alias}.id, ${alias}.create_by, ${alias}.creator_id, ${alias}.create_time,
+        ${alias}.update_by, ${alias}.last_operator_id, ${alias}.update_time, ${alias}.status,
+        ${alias}.status_timestamp, ${alias}.movement, ${alias}.os, ${alias}.browser, ${alias}.ip_address
+    </sql>
+
+    <select id="selectAnImcInspectionTaskLogList" parameterType="AnImcInspectionTaskLog" resultMap="AnImcInspectionTaskLogResult">
+        <include refid="selectAnImcInspectionTaskLogVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectAnImcInspectionTaskLogById" parameterType="Long" resultMap="AnImcInspectionTaskLogResult">
+        <include refid="selectAnImcInspectionTaskLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnImcInspectionTaskLog" parameterType="AnImcInspectionTaskLog" useGeneratedKeys="true" keyProperty="id">
+        insert into an_imc_inspection_task_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="version != null ">version,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="taskId != null ">task_id,</if>
+            <if test="status != null ">status,</if>
+            <if test="statusTimestamp != null ">status_timestamp,</if>
+            <if test="movement != null  and movement != ''">movement,</if>
+            <if test="os != null  and os != ''">os,</if>
+            <if test="browser != null  and browser != ''">browser,</if>
+            <if test="ipAddress != null  and ipAddress != ''">ip_address,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnImcInspectionTaskLog" parameterType="AnImcInspectionTaskLog">
+        update an_imc_inspection_task_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="taskId != null ">task_id = #{taskId},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="statusTimestamp != null ">status_timestamp = #{statusTimestamp},</if>
+            <if test="movement != null  and movement != ''">movement = #{movement},</if>
+            <if test="os != null  and os != ''">os = #{os},</if>
+            <if test="browser != null  and browser != ''">browser = #{browser},</if>
+            <if test="ipAddress != null  and ipAddress != ''">ip_address = #{ipAddress},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnImcInspectionTaskLogById" parameterType="Long">
+        delete from an_imc_inspection_task_log where id = #{id}
+    </delete>
+
+    <delete id="deleteAnImcInspectionTaskLogByIds" parameterType="String">
+        delete from an_imc_inspection_task_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="getTaskLogs" parameterType="Long" resultMap="TaskLogDto">
+        <include refid="selectTaskLogDto">
+            <property name="alias" value="taskLog"></property>
+        </include>,
+            task.task_name
+        from
+        an_imc_inspection_task as task , an_imc_inspection_task_log as taskLog
+        where 1=1 and task.id = #{taskId} and task.id = taskLog.task_id
+        order by taskLog.update_time desc
+    </select>
+</mapper>

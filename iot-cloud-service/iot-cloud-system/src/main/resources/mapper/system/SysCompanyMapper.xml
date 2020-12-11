@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.system.mapper.SysCompanyMapper">
+
+    <resultMap type="SysCompany" id="SysCompanyResult">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="companyCode" column="company_code"/>
+        <result property="companyName" column="company_name"/>
+        <result property="type" column="type"/>
+        <result property="legalPersonName" column="legal_person_name"/>
+        <result property="legalPersonPhone" column="legal_person_phone"/>
+        <result property="legalPersonNumber" column="legal_person_number"/>
+        <result property="mainWork" column="main_work"/>
+        <result property="country" column="country"/>
+        <result property="zipCode" column="zip_code"/>
+        <result property="accountName" column="account_name"/>
+        <result property="accountNumber" column="account_number"/>
+        <result property="licenseType" column="license_type"/>
+        <result property="registeredCaptial" column="registered_captial"/>
+        <result property="expirationDate" column="expiration_date"/>
+        <result property="businessScope" column="business_scope"/>
+        <result property="productCategory" column="product_category"/>
+        <result property="legalPersonidPhoto" column="legal_personId_photo"/>
+        <result property="businessLicensePhoto" column="business_license_photo"/>
+        <result property="accountOpeningLicense" column="account_opening_license"/>
+        <result property="compayAddress" column="compay_address"/>
+        <result property="provinceName" column="province_name"/>
+        <result property="provinceId" column="province_id"/>
+        <result property="cityName" column="city_name"/>
+        <result property="cityId" column="city_id"/>
+        <result property="areaName" column="area_name"/>
+        <result property="areaId" column="area_id"/>
+        <result property="streetName" column="street_name"/>
+        <result property="streetId" column="street_id"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="version" column="version"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="lastOperatorId" column="last_operator_id"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <sql id="selectSysCompanyVo">
+        select id, dept_id, company_code, company_name, type, legal_person_name, legal_person_phone, legal_person_number, main_work, country, zip_code, account_name, account_number, license_type, registered_captial, expiration_date, business_scope, product_category, legal_personId_photo, business_license_photo, account_opening_license, compay_address, province_name, province_id, city_name, city_id, area_name, area_id, street_name, street_id, detail_address, status, del_flag, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, user_id from sys_company
+    </sql>
+
+    <select id="selectSysCompanyList" parameterType="SysCompany" resultMap="SysCompanyResult">
+        <include refid="selectSysCompanyVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''">and company_name like concat('%', #{companyName},
+                '%')
+            </if>
+            <if test="legalPersonName != null  and legalPersonName != ''">and legal_person_name like concat('%',
+                #{legalPersonName}, '%')
+            </if>
+            <if test="accountName != null  and accountName != ''">and account_name like concat('%', #{accountName},
+                '%')
+            </if>
+            <if test="provinceName != null  and provinceName != ''">and province_name like concat('%', #{provinceName},
+                '%')
+            </if>
+            <if test="cityName != null  and cityName != ''">and city_name like concat('%', #{cityName}, '%')</if>
+            <if test="areaName != null  and areaName != ''">and area_name like concat('%', #{areaName}, '%')</if>
+            <if test="streetName != null  and streetName != ''">and street_name like concat('%', #{streetName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSysCompanyById" parameterType="Long" resultMap="SysCompanyResult">
+        <include refid="selectSysCompanyVo"/>
+        where id = #{id}
+    </select>
+
+<!--    <insert id="insertSysCompany" parameterType="SysCompany" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into sys_company-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="deptId != null ">dept_id,</if>-->
+<!--            <if test="companyCode != null  and companyCode != ''">company_code,</if>-->
+<!--            <if test="companyName != null  and companyName != ''">company_name,</if>-->
+<!--            <if test="type != null  and type != ''">type,</if>-->
+<!--            <if test="legalPersonName != null  and legalPersonName != ''">legal_person_name,</if>-->
+<!--            <if test="legalPersonPhone != null  and legalPersonPhone != ''">legal_person_phone,</if>-->
+<!--            <if test="legalPersonNumber != null  and legalPersonNumber != ''">legal_person_number,</if>-->
+<!--            <if test="mainWork != null  and mainWork != ''">main_work,</if>-->
+<!--            <if test="country != null  and country != ''">country,</if>-->
+<!--            <if test="zipCode != null  and zipCode != ''">zip_code,</if>-->
+<!--            <if test="accountName != null  and accountName != ''">account_name,</if>-->
+<!--            <if test="accountNumber != null  and accountNumber != ''">account_number,</if>-->
+<!--            <if test="licenseType != null  and licenseType != ''">license_type,</if>-->
+<!--            <if test="registeredCaptial != null  and registeredCaptial != ''">registered_captial,</if>-->
+<!--            <if test="expirationDate != null ">expiration_date,</if>-->
+<!--            <if test="businessScope != null  and businessScope != ''">business_scope,</if>-->
+<!--            <if test="productCategory != null  and productCategory != ''">product_category,</if>-->
+<!--            <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">legal_personId_photo,</if>-->
+<!--            <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">business_license_photo,</if>-->
+<!--            <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">account_opening_license,</if>-->
+<!--            <if test="compayAddress != null  and compayAddress != ''">compay_address,</if>-->
+<!--            <if test="provinceName != null  and provinceName != ''">province_name,</if>-->
+<!--            <if test="provinceId != null ">province_id,</if>-->
+<!--            <if test="cityName != null  and cityName != ''">city_name,</if>-->
+<!--            <if test="cityId != null ">city_id,</if>-->
+<!--            <if test="areaName != null  and areaName != ''">area_name,</if>-->
+<!--            <if test="areaId != null ">area_id,</if>-->
+<!--            <if test="streetName != null  and streetName != ''">street_name,</if>-->
+<!--            <if test="streetId != null ">street_id,</if>-->
+<!--            <if test="detailAddress != null  and detailAddress != ''">detail_address,</if>-->
+<!--            <if test="status != null  and status != ''">status,</if>-->
+<!--            <if test="delFlag != null  and delFlag != ''">del_flag,</if>-->
+<!--            <if test="version != null ">version,</if>-->
+<!--            <if test="createBy != null  and createBy != ''">create_by,</if>-->
+<!--            <if test="creatorId != null ">creator_id,</if>-->
+<!--            <if test="createTime != null ">create_time,</if>-->
+<!--            <if test="updateBy != null  and updateBy != ''">update_by,</if>-->
+<!--            <if test="lastOperatorId != null ">last_operator_id,</if>-->
+<!--            <if test="updateTime != null ">update_time,</if>-->
+<!--            <if test="remark != null  and remark != ''">remark,</if>-->
+<!--            <if test="userId != null ">user_id,</if>-->
+<!--        </trim>-->
+<!--    </insert>-->
+
+    <insert id="insertSysCompany" parameterType="SysCompany" keyProperty="id">
+        insert into sys_company(
+        <if test="id != null  and id != ''">id,</if>
+        <if test="companyCode != null  and companyCode != ''">company_code,</if>
+        <if test="companyName != null  and companyName != ''">company_name,</if>
+<!--        <if test="deptId != null and deptId != ''">dept_id,</if>-->
+<!--        <if test="type != null  and type != ''">type,</if>-->
+<!--        <if test="legalPersonName != null  and legalPersonName != ''">legal_person_name,</if>-->
+<!--        <if test="legalPersonPhone != null  and legalPersonPhone != ''">legal_person_phone,</if>-->
+<!--        <if test="legalPersonNumber != null  and legalPersonNumber != ''">legal_person_number,</if>-->
+<!--        <if test="mainWork != null  and mainWork != ''">main_work,</if>-->
+<!--        <if test="country != null  and country != ''">country,</if>-->
+<!--        <if test="zipCode != null  and zipCode != ''">zip_code,</if>-->
+<!--        <if test="accountName != null  and accountName != ''">account_name,</if>-->
+<!--        <if test="accountNumber != null  and accountNumber != ''">account_number,</if>-->
+<!--        <if test="licenseType != null  and licenseType != ''">license_type,</if>-->
+<!--        <if test="registeredCaptial != null  and registeredCaptial != ''">registered_captial,</if>-->
+<!--        <if test="expirationDate != null ">expiration_date,</if>-->
+<!--        <if test="businessScope != null  and businessScope != ''">business_scope,</if>-->
+<!--        <if test="productCategory != null  and productCategory != ''">product_category,</if>-->
+<!--        <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">legal_personId_photo,</if>-->
+<!--        <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">business_license_photo,</if>-->
+<!--        <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">account_opening_license,</if>-->
+<!--        <if test="compayAddress != null  and compayAddress != ''">compay_address,</if>-->
+<!--        <if test="provinceName != null  and provinceName != ''">province_name,</if>-->
+<!--        <if test="provinceId != null ">province_id,</if>-->
+<!--        <if test="cityName != null  and cityName != ''">city_name,</if>-->
+<!--        <if test="cityId != null ">city_id,</if>-->
+<!--        <if test="areaName != null  and areaName != ''">area_name,</if>-->
+<!--        <if test="areaId != null ">area_id,</if>-->
+<!--        <if test="streetName != null  and streetName != ''">street_name,</if>-->
+<!--        <if test="streetId != null ">street_id,</if>-->
+<!--        <if test="detailAddress != null  and detailAddress != ''">detail_address,</if>-->
+<!--        <if test="status != null  and status != ''">status,</if>-->
+<!--        <if test="delFlag != null  and delFlag != ''">del_flag,</if>-->
+<!--        <if test="version != null ">version,</if>-->
+<!--        <if test="createBy != null  and createBy != ''">create_by,</if>-->
+<!--        <if test="creatorId != null ">creator_id,</if>-->
+<!--        <if test="updateBy != null  and updateBy != ''">update_by,</if>-->
+<!--        <if test="lastOperatorId != null ">last_operator_id,</if>-->
+<!--        <if test="updateTime != null ">update_time,</if>-->
+<!--        <if test="remark != null  and remark != ''">remark,</if>-->
+<!--        <if test="userId != null ">user_id,</if>-->
+        create_time
+        )values(
+        <if test="id != null  and id != ''">#{id},</if>
+        <if test="companyCode != null  and companyCode != ''">#{companyCode},</if>
+        <if test="companyName != null  and companyName != ''">#{companyName},</if>
+<!--        <if test="deptId != null and deptId != ''">#{deptId},</if>-->
+        <!--        <if test="type != null  and type != ''">#{type},</if>-->
+<!--        <if test="legalPersonName != null  and legalPersonName != ''">#{legalPersonName},</if>-->
+<!--        <if test="legalPersonPhone != null  and legalPersonPhone != ''">#{legalPersonPhone},</if>-->
+<!--        <if test="legalPersonNumber != null  and legalPersonNumber != ''">#{legalPersonNumber},</if>-->
+<!--        <if test="mainWork != null  and mainWork != ''">#{mainWork},</if>-->
+<!--        <if test="country != null  and country != ''">#{country},</if>-->
+<!--        <if test="zipCode != null  and zipCode != ''">#{zip_Code},</if>-->
+<!--        <if test="accountName != null  and accountName != ''">#{accountName},</if>-->
+<!--        <if test="accountNumber != null  and accountNumber != ''">#{accountNumber},</if>-->
+<!--        <if test="licenseType != null  and licenseType != ''">#{licenseType},</if>-->
+<!--        <if test="registeredCaptial != null  and registeredCaptial != ''">#{registeredCaptial},</if>-->
+<!--        <if test="expirationDate != null ">#{expirationDate},</if>-->
+<!--        <if test="businessScope != null  and businessScope != ''">#{businessScope},</if>-->
+<!--        <if test="productCategory != null  and productCategory != ''">#{productCategory},</if>-->
+<!--        <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">#{legalPersonIdPhoto},</if>-->
+<!--        <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">#{businessLicensePhoto},</if>-->
+<!--        <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">#{accountOpeningLicense},</if>-->
+<!--        <if test="compayAddress != null  and compayAddress != ''">#{compayAddress},</if>-->
+<!--        <if test="provinceName != null  and provinceName != ''">#{provinceName},</if>-->
+<!--        <if test="provinceId != null ">#{provinceId},</if>-->
+<!--        <if test="cityName != null  and cityName != ''">#{cityName},</if>-->
+<!--        <if test="cityId != null ">#{cityId},</if>-->
+<!--        <if test="areaName != null  and areaName != ''">#{areaName},</if>-->
+<!--        <if test="areaId != null ">#{areaId},</if>-->
+<!--        <if test="streetName != null  and streetName != ''">#{streetName},</if>-->
+<!--        <if test="streetId != null ">#{streetId},</if>-->
+<!--        <if test="detailAddress != null  and detailAddress != ''">#{detailAddress},</if>-->
+<!--        <if test="status != null  and status != ''">#{status},</if>-->
+<!--        <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>-->
+<!--        <if test="version != null ">#{version},</if>-->
+<!--        <if test="createBy != null  and createBy != ''">#{createBy},</if>-->
+<!--        <if test="creatorId != null ">#{creatorId},</if>-->
+<!--        <if test="createTime != null ">#{createTime},</if>-->
+<!--        <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>-->
+<!--        <if test="lastOperatorId != null ">#{lastOperatorId},</if>-->
+<!--        <if test="updateTime != null ">#{updateTime},</if>-->
+<!--        <if test="remark != null  and remark != ''">#{remark},</if>-->
+<!--        <if test="userId != null ">#{userId},</if>-->
+        sysdate()
+        )
+
+    </insert>
+
+    <update id="updateSysCompany" parameterType="SysCompany">
+        update sys_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="companyCode != null  and companyCode != ''">company_code = #{companyCode},</if>
+            <if test="companyName != null  and companyName != ''">company_name = #{companyName},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="legalPersonName != null  and legalPersonName != ''">legal_person_name = #{legalPersonName},</if>
+            <if test="legalPersonPhone != null  and legalPersonPhone != ''">legal_person_phone = #{legalPersonPhone},
+            </if>
+            <if test="legalPersonNumber != null  and legalPersonNumber != ''">legal_person_number =
+                #{legalPersonNumber},
+            </if>
+            <if test="mainWork != null  and mainWork != ''">main_work = #{mainWork},</if>
+            <if test="country != null  and country != ''">country = #{country},</if>
+            <if test="zipCode != null  and zipCode != ''">zip_code = #{zipCode},</if>
+            <if test="accountName != null  and accountName != ''">account_name = #{accountName},</if>
+            <if test="accountNumber != null  and accountNumber != ''">account_number = #{accountNumber},</if>
+            <if test="licenseType != null  and licenseType != ''">license_type = #{licenseType},</if>
+            <if test="registeredCaptial != null  and registeredCaptial != ''">registered_captial =
+                #{registeredCaptial},
+            </if>
+            <if test="expirationDate != null ">expiration_date = #{expirationDate},</if>
+            <if test="businessScope != null  and businessScope != ''">business_scope = #{businessScope},</if>
+            <if test="productCategory != null  and productCategory != ''">product_category = #{productCategory},</if>
+            <if test="legalPersonidPhoto != null  and legalPersonidPhoto != ''">legal_personId_photo =
+                #{legalPersonidPhoto},
+            </if>
+            <if test="businessLicensePhoto != null  and businessLicensePhoto != ''">business_license_photo =
+                #{businessLicensePhoto},
+            </if>
+            <if test="accountOpeningLicense != null  and accountOpeningLicense != ''">account_opening_license =
+                #{accountOpeningLicense},
+            </if>
+            <if test="compayAddress != null  and compayAddress != ''">compay_address = #{compayAddress},</if>
+            <if test="provinceName != null  and provinceName != ''">province_name = #{provinceName},</if>
+            <if test="provinceId != null ">province_id = #{provinceId},</if>
+            <if test="cityName != null  and cityName != ''">city_name = #{cityName},</if>
+            <if test="cityId != null ">city_id = #{cityId},</if>
+            <if test="areaName != null  and areaName != ''">area_name = #{areaName},</if>
+            <if test="areaId != null ">area_id = #{areaId},</if>
+            <if test="streetName != null  and streetName != ''">street_name = #{streetName},</if>
+            <if test="streetId != null ">street_id = #{streetId},</if>
+            <if test="detailAddress != null  and detailAddress != ''">detail_address = #{detailAddress},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCompanyById" parameterType="Long">
+        delete from sys_company where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCompanyByIds" parameterType="String">
+        delete from sys_company where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectSysCompanyByDeptId" parameterType="Long" resultMap="SysCompanyResult">
+        <include refid="selectSysCompanyVo"/>
+        where dept_id = #{deptId}
+    </select>
+</mapper>

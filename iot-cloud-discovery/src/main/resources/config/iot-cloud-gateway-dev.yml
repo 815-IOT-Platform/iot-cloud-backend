@@ -1,0 +1,120 @@
+spring: 
+  redis:
+    database: 1
+    host: iot-cloud-db-redis
+    port: 6379
+    password:      # 密码（默认为空）
+    timeout: 6000ms  # 连接超时时长（毫秒）
+    lettuce:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+  cloud:
+    gateway:
+      #白名单列表
+      whiteList: /auth/login,/auth/user/login,/auth/cas/client/validateLogin,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/ws/ws,/websocket/v2/api-docs,/system/auth/activeUser/*,/system/auth/register,/system/auth/registerCompany,/tpc/v2/api-docs
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        # 认证中心
+        - id: iot-cloud-auth
+          uri: lb://iot-cloud-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            # 验证码处理
+            - CacheRequest
+            - ImgCodeFilter
+            - StripPrefix=1
+        # 代码生成
+        - id: iot-cloud-gen
+          uri: lb://iot-cloud-gen
+          predicates:
+            - Path=/gen/**
+          filters:
+            - StripPrefix=1
+        # dfs模块
+        - id: iot-cloud-dfs
+          uri: lb://iot-cloud-dfs
+          predicates:
+            - Path=/dfs/**
+          filters:
+            - StripPrefix=1
+        # system 模块
+        - id: iot-cloud-system
+          uri: lb://iot-cloud-system
+          predicates:
+            - Path=/system/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+              # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
+        # imc 模块
+        - id: iot-cloud-imc
+          uri: lb://iot-cloud-imc
+          predicates:
+            - Path=/imc/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+              # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
+        # websocket模块
+        - id: iot-cloud-websocket
+          uri: lb:ws://iot-cloud-websocket
+          predicates:
+            - Path=/ws/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
+        - id: iot-cloud-websocket
+          uri: lb://iot-cloud-websocket
+          predicates:
+            - Path=/websocket/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
+        # tpc模块
+        - id: iot-cloud-tpc
+          uri: lb://iot-cloud-tpc
+          predicates:
+            - Path=/tpc/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
+

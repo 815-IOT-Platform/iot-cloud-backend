@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.tpc.mapper.TpcMqConsumerMapper">
+    
+    <resultMap type="TpcMqConsumer" id="BaseResultMap">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="applicationName"    column="application_name"    />
+        <result property="consumerCode"    column="consumer_code"    />
+        <result property="consumerName"    column="consumer_name"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ${alias}.id, ${alias}.version, ${alias}.application_name, ${alias}.consumer_code, ${alias}.consumer_name, ${alias}.status, ${alias}.remark,
+        ${alias}.create_by, ${alias}.creator_id, ${alias}.create_time, ${alias}.update_by, ${alias}.last_operator_id, ${alias}.update_time
+    </sql>
+
+    <sql id="Base_Topic_Column_List">
+        ${alias}.version as topic_version,
+        ${alias}.producer_id,
+        ${alias}.topic_code,
+        ${alias}.topic_name,
+        ${alias}.mq_type,
+        ${alias}.msg_type,
+        ${alias}.status as topic_status,
+        ${alias}.remarks as topic_remarks,
+        ${alias}.create_by as topic_create_by,
+        ${alias}.creator_id as topic_creator_id,
+        ${alias}.create_time as topic_create_time,
+        ${alias}.update_by as topic_update_by,
+        ${alias}.last_operator_id as topic_last_operator_id,
+        ${alias}.update_time as topic_update_time
+    </sql>
+
+    <sql id="Base_Tag_Column_List" >
+        ${alias}.id as tag_id, ${alias}.version as tag_version, ${alias}.topic_id, ${alias}.tag_code, ${alias}.tag_name,
+        ${alias}.status as tag_status, ${alias}.remark as tag_remark, ${alias}.create_by as tag_create_by, ${alias}.creator_id as tag_creator_id,
+        ${alias}.create_time as tag_create_time, ${alias}.update_by as tag_update_by, ${alias}.last_operator_id as tag_last_operator_id, ${alias}.update_time as tag_update_time
+    </sql>
+    <delete id="deleteSubscribeTagByTagId">
+        DELETE FROM an_tpc_mq_subscribe_tag WHERE tag_id = #{tagId}
+    </delete>
+    <delete id="deleteSubscribeByConsumerId">
+        DELETE FROM an_tpc_mq_subscribe WHERE consumer_id = #{consumerId}
+    </delete>
+    <delete id="deleteSubscribeTagBySubscribeIdList">
+        DELETE FROM an_tpc_mq_subscribe_tag WHERE subscribe_id IN
+        <foreach collection="subscribeIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <resultMap id="TpcMqConsumerVoResultMap" extends="BaseResultMap" type="com.iot.tpc.vo.TpcMqConsumerVo">
+        <collection property="mqTopicVoList" ofType="com.iot.tpc.vo.TpcMqTopicVo">
+            <result property="topicCode" column="topic_code"/>
+            <result property="topicName" column="topic_name"/>
+            <result property="status" column="topic_status"/>
+            <result property="updateBy" column="topic_update_by"/>
+            <result property="updateTime" column="topic_update_time"/>
+        </collection>
+    </resultMap>
+    <select id="listTpcMqConsumerVoWithPage" resultMap="TpcMqConsumerVoResultMap">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="consumer"/>
+        </include>
+        ,
+        <include refid="Base_Topic_Column_List">
+            <property name="alias" value="topic"/>
+        </include>
+        from an_tpc_mq_consumer consumer
+        LEFT JOIN an_tpc_mq_subscribe subscribe ON consumer.id = subscribe.consumer_id
+        LEFT JOIN an_tpc_mq_topic topic on topic.id = subscribe.topic_id
+        WHERE 1 = 1
+        <if test="consumerCode != null and consumerCode !=''">
+            AND consumer.consumer_code LIKE concat(#{consumerCode}, '%')
+        </if>
+        <if test="consumerName != null and consumerName !=''">
+            AND consumer.consumer_name LIKE concat(#{consumerName}, '%')
+        </if>
+        <if test="status != null and status !=''">
+            AND consumer.status = #{status,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <resultMap id="TpcMqSubscribeVoResultMap" extends="BaseResultMap" type="com.iot.tpc.vo.TpcMqSubscribeVo">
+        <result property="topicCode" column="topic_code"/>
+        <result property="topicName" column="topic_name"/>
+        <result property="id" column="subscribeId"/>
+    </resultMap>
+
+    <select id="listTpcMqSubscribeVoWithPage" resultMap="TpcMqSubscribeVoResultMap">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="consumer"/>
+        </include>
+        ,
+        topic.topic_code,
+        topic.topic_name,
+        subscribe.id as subscribeId
+        from
+        an_tpc_mq_subscribe subscribe
+        LEFT JOIN an_tpc_mq_consumer consumer ON subscribe.consumer_id = consumer.id
+        LEFT JOIN an_tpc_mq_topic topic on topic.id = subscribe.topic_id
+        WHERE 1 = 1
+        <if test="consumerCode != null and consumerCode !=''">
+            AND consumer.consumer_code LIKE concat(#{consumerCode}, '%')
+        </if>
+        <if test="consumerName != null and consumerName !=''">
+            AND consumer.consumer_name LIKE concat(#{consumerName}, '%')
+        </if>
+        <if test="status != null and status !=''">
+            AND consumer.status = #{status,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="listSubscribeIdByConsumerId" resultType="java.lang.Long">
+        select id FROM an_tpc_mq_subscribe WHERE consumer_id = #{consumerId}
+    </select>
+
+    <resultMap id="TpcMqSubscribeVoResultMapN" type="com.iot.tpc.vo.TpcMqSubscribeVo">
+        <id property="id" column="subscribeId"/>
+        <collection property="tagVoList" ofType="com.iot.tpc.vo.TpcMqTagVo">
+            <result property="tagCode" column="tag_code"/>
+            <result property="tagName" column="tag_name"/>
+            <result property="status" column="tag_status"/>
+            <result property="updateBy" column="tag_update_by"/>
+            <result property="updateTime" column="tag_update_time"/>
+        </collection>
+    </resultMap>
+
+    <select id="listSubscribeVo" resultMap="TpcMqSubscribeVoResultMapN">
+        SELECT
+        st.subscribe_id as subscribeId
+        ,
+        <include refid="Base_Tag_Column_List">
+            <property name="alias" value="tag"/>
+        </include>
+        from an_tpc_mq_subscribe_tag st
+        LEFT JOIN an_tpc_mq_tag tag on tag.id = st.tag_id
+        WHERE st.subscribe_id IN
+        <foreach collection="subscribeIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="listConsumerGroupByTopic" resultType="java.lang.String">
+        SELECT consumer_code from an_tpc_mq_subscribe WHERE topic_code = #{topic}
+    </select>
+    <select id="getByCid" resultType="com.iot.tpc.domain.TpcMqConsumer">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="consumer"/>
+        </include>
+        from an_tpc_mq_consumer consumer where consumer.consumer_code = #{cid}
+    </select>
+    
+</mapper>

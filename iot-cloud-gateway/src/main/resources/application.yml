@@ -1,0 +1,11 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: iot-cloud-gateway
+  devtools:
+    restart:
+      enabled: true
+  profiles:
+    active: dev

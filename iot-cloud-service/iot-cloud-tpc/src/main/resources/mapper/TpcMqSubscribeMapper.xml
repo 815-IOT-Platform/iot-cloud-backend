@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.tpc.mapper.TpcMqSubscribeMapper">
+    
+    <resultMap type="TpcMqSubscribe" id="TpcMqSubscribeResult">
+        <result property="id"    column="id"    />
+        <result property="consumerId"    column="consumer_id"    />
+        <result property="consumerCode"    column="consumer_code"    />
+        <result property="topicId"    column="topic_id"    />
+        <result property="topicCode"    column="topic_code"    />
+    </resultMap>
+
+    <sql id="selectTpcMqSubscribeVo">
+        select id, consumer_id, consumer_code, topic_id, topic_code from an_tpc_mq_subscribe
+    </sql>
+
+    <select id="selectTpcMqSubscribeList" parameterType="TpcMqSubscribe" resultMap="TpcMqSubscribeResult">
+        <include refid="selectTpcMqSubscribeVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectTpcMqSubscribeById" parameterType="Long" resultMap="TpcMqSubscribeResult">
+        <include refid="selectTpcMqSubscribeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTpcMqSubscribe" parameterType="TpcMqSubscribe">
+        insert into an_tpc_mq_subscribe
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="consumerId != null ">consumer_id,</if>
+            <if test="consumerCode != null  and consumerCode != ''">consumer_code,</if>
+            <if test="topicId != null ">topic_id,</if>
+            <if test="topicCode != null  and topicCode != ''">topic_code,</if>
+         </trim>
+    </insert>
+
+    <update id="updateTpcMqSubscribe" parameterType="TpcMqSubscribe">
+        update an_tpc_mq_subscribe
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="consumerId != null ">consumer_id = #{consumerId},</if>
+            <if test="consumerCode != null  and consumerCode != ''">consumer_code = #{consumerCode},</if>
+            <if test="topicId != null ">topic_id = #{topicId},</if>
+            <if test="topicCode != null  and topicCode != ''">topic_code = #{topicCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTpcMqSubscribeById" parameterType="Long">
+        delete from an_tpc_mq_subscribe where id = #{id}
+    </delete>
+
+    <delete id="deleteTpcMqSubscribeByIds" parameterType="String">
+        delete from an_tpc_mq_subscribe where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

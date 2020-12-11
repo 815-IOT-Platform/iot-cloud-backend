@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.imc.mapper.IotImcInspectionTaskMapper">
+    
+    <resultMap type="AnImcInspectionTask" id="AnImcInspectionTaskResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="principalId"    column="principal_id"    />
+        <result property="facilitatorId"    column="facilitator_id"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="location"    column="location"    />
+        <result property="status"    column="status"    />
+        <result property="totalCost"    column="total_cost"    />
+        <result property="maintenanceCost"    column="maintenance_cost"    />
+        <result property="scheduledStartTime"    column="scheduled_start_time"    />
+        <result property="actualFinishTime"    column="actual_finish_time"    />
+        <result property="days"    column="days"    />
+        <result property="inspectionType"    column="inspection_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="taskName"    column="task_name"    />
+        <result property="frequency"    column="frequency"    />
+        <result property="content"     column="content"     />
+        <result property="pointSum"     column="point_sum"      />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectAnImcInspectionTaskVo">
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, principal_id, facilitator_id, project_id, location, status, total_cost, maintenance_cost, scheduled_start_time, actual_finish_time, days, inspection_type, remark, task_name, frequency, content, point_sum, company_id, company_name from an_imc_inspection_task
+    </sql>
+
+    <select id="selectAnImcInspectionTaskList" parameterType="AnImcInspectionTask" resultMap="AnImcInspectionTaskResult">
+        <include refid="selectAnImcInspectionTaskVo"/>
+        <where>  
+            <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnImcInspectionTaskById" parameterType="Long" resultMap="AnImcInspectionTaskResult">
+        <include refid="selectAnImcInspectionTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnImcInspectionTask" parameterType="AnImcInspectionTask" useGeneratedKeys="true" keyProperty="id">
+        insert into an_imc_inspection_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="version != null ">version,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="principalId != null ">principal_id,</if>
+            <if test="facilitatorId != null ">facilitator_id,</if>
+            <if test="projectId != null ">project_id,</if>
+            <if test="location != null  and location != ''">location,</if>
+            <if test="status != null ">status,</if>
+            <if test="totalCost != null ">total_cost,</if>
+            <if test="maintenanceCost != null ">maintenance_cost,</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time,</if>
+            <if test="actualFinishTime != null ">actual_finish_time,</if>
+            <if test="days != null ">days,</if>
+            <if test="inspectionType != null ">inspection_type,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="taskName != null  and taskName != ''">task_name,</if>
+            <if test="frequency != null ">frequency,</if>
+            <if test="content != null" >content,</if>
+            <if test="pointSum != null">point_sum,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnImcInspectionTask" parameterType="AnImcInspectionTask">
+        update an_imc_inspection_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="principalId != null ">principal_id = #{principalId},</if>
+            <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="totalCost != null ">total_cost = #{totalCost},</if>
+            <if test="maintenanceCost != null ">maintenance_cost = #{maintenanceCost},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="days != null ">days = #{days},</if>
+            <if test="inspectionType != null ">inspection_type = #{inspectionType},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="taskName != null  and taskName != ''">task_name = #{taskName},</if>
+            <if test="frequency != null ">frequency = #{frequency},</if>
+            <if test="content != null" >content = #{content},</if>
+            <if test="pointSum != null">point_sum = #{pointSum},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnImcInspectionTaskById" parameterType="Long">
+        delete from an_imc_inspection_task where id = #{id}
+    </delete>
+
+    <delete id="deleteAnImcInspectionTaskByIds" parameterType="String">
+        delete from an_imc_inspection_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="modifyTaskStatus" parameterType="AnImcInspectionTask">
+        update an_imc_inspection_task as task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="principalId != null ">principal_id = #{principalId},</if>
+            <if test="facilitatorId != null ">facilitator_id = #{facilitatorId},</if>
+            <if test="projectId != null ">project_id = #{projectId},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="totalCost != null ">total_cost = #{totalCost},</if>
+            <if test="maintenanceCost != null ">maintenance_cost = #{maintenanceCost},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="days != null ">days = #{days},</if>
+            <if test="inspectionType != null ">inspection_type = #{inspectionType},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="taskName != null  and taskName != ''">task_name = #{taskName},</if>
+            <if test="frequency != null ">frequency = #{frequency},</if>
+            <if test="content != null" >content = #{content},</if>
+            <if test="pointSum != null">point_sum = #{pointSum},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where 1=1
+        and (
+        <if test="status == -1">task.status = 0</if>
+        <if test="status == 1">(task.status = 2 and task.inspection_type = 0) or task.status = 0</if>
+        <if test="status == 3">task.status = 2</if>
+        <if test="status == 4">task.status = 3</if>
+        <if test="status == 5">task.status = 4</if>
+        <if test="status == 6">task.status = 5</if>
+        <if test="status == 7">task.status = 6</if>
+        )
+        and task.id = #{id}
+    </update>
+
+    <select id="getAllUnDistributedTask" parameterType="Long" resultMap="AnImcInspectionTaskResult">
+        <include refid="selectAnImcInspectionTaskVo"/>
+        as task
+        where 1=1
+        and task.facilitator_id = #{facilitatorId}
+        and task.status = 3
+        and task.id in
+        (
+            select distinct item.inspection_task_id
+            from an_imc_inspection_item as item
+            where item.inspection_task_id = task.id
+            and item.status in (-1,1,2,3)
+            union
+            select task2.id
+            from an_imc_inspection_task as task2,an_imc_inspection_item as item
+            where
+            task2.facilitator_id = #{facilitatorId}
+            and task2.status = 3
+            and task2.id not in
+            (
+                select inspection_task_id
+                from an_imc_inspection_item
+                where inspection_task_id is not null
+            )
+        )
+        order by update_time desc
+    </select>
+
+    <select id="getAllFinishedTaskByFacilitatorId" parameterType="Long" resultMap="AnImcInspectionTaskResult">
+        <include refid="selectAnImcInspectionTaskVo"/>
+        as task
+        where 1=1
+        and task.facilitator_id = #{facilitatorId}
+        and (task.status in (4,5,6,7))
+        order by update_time desc
+    </select>
+</mapper>

@@ -1,0 +1,11 @@
+server:
+  port: 8006
+
+spring:
+  application:
+    name: ananops-dfs
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

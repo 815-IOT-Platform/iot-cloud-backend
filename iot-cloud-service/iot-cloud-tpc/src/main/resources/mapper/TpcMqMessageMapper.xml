@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.tpc.mapper.TpcMqMessageMapper">
+    
+    <resultMap type="TpcMqMessage" id="BaseResultMap">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="messageKey"    column="message_key"    />
+        <result property="messageTopic"    column="message_topic"    />
+        <result property="messageTag"    column="message_tag"    />
+        <result property="messageBody"    column="message_body"    />
+        <result property="messageType"    column="message_type"    />
+        <result property="producerGroup"    column="producer_group"    />
+        <result property="delayLevel"    column="delay_level"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="messageStatus"    column="message_status"    />
+        <result property="taskStatus"    column="task_status"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="resendTimes"    column="resend_times"    />
+        <result property="dead"    column="dead"    />
+        <result property="nextExeTime"    column="next_exe_time"    />
+        <result property="yn"    column="yn"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <resultMap id="ResultMapWithBLOBs" type="com.iot.tpc.domain.TpcMqMessage" extends="BaseResultMap">
+        <result column="message_body" property="messageBody" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ${alias}.id,
+        ${alias}.version,
+        ${alias}.message_key,
+        ${alias}.message_topic,
+        ${alias}.message_tag,
+        ${alias}.message_type,
+        ${alias}.producer_group,
+        ${alias}.delay_level,
+        ${alias}.order_type,
+        ${alias}.message_status,
+        ${alias}.task_status,
+        ${alias}.update_time,
+        ${alias}.resend_times,
+        ${alias}.dead,
+        ${alias}.next_exe_time,
+        ${alias}.yn,
+        ${alias}.create_by,
+        ${alias}.creator_id,
+        ${alias}.create_time,
+        ${alias}.update_by,
+        ${alias}.last_operator_id
+    </sql>
+    <sql id="Blob_Column_List">
+        ${alias}.message_body
+    </sql>
+    <update id="addTaskExeCountById">
+        UPDATE an_tpc_mq_message
+        SET resend_times = resend_times + 1, update_time = now()
+        WHERE id = #{messageId}
+    </update>
+    <update id="updateAlreadyDeadByMessageId">
+        UPDATE an_tpc_mq_message
+        SET dead = 1, update_time = now(), task_status = 4
+        WHERE id = #{messageId}
+    </update>
+    <update id="updateMqMessageTaskStatus">
+        UPDATE an_tpc_mq_message
+        SET task_status = #{taskStatus}, update_time = now()
+        WHERE id = #{id}
+        and task_status IN
+        <foreach collection="preStatusList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <delete id="deleteMessageByMessageKey">
+        DELETE FROM an_tpc_mq_message
+        WHERE message_key = #{messageKey,jdbcType=VARCHAR}
+    </delete>
+    <delete id="batchDeleteMessage">
+        delete from an_tpc_mq_message
+        where message_key IN
+        <foreach collection="messageKeyList" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="getByMessageKey" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        ,
+        <include refid="Blob_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        FROM an_tpc_mq_message message
+        WHERE message.message_key = #{messageKey,jdbcType=VARCHAR}
+    </select>
+    <select id="queryWaitingConfirmMessageKeyList" resultType="java.lang.String">
+        SELECT message_key
+        FROM
+        an_tpc_mq_message
+        WHERE
+        mod(id, #{shardingTotalCount}) = #{shardingItem}
+        AND task_status = #{taskStatus}
+        AND message_status = #{messageStatus}
+        AND create_time &lt; #{createTimeBefore}
+        AND producer_group = #{producerGroup}
+        AND yn = 0
+        ORDER BY update_time
+        LIMIT ${fetchNum}
+    </select>
+    <select id="listMessageForWaitingProcess" resultMap="ResultMapWithBLOBs">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        ,
+        <include refid="Blob_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        FROM
+        an_tpc_mq_message message
+        WHERE
+        mod(message.id, #{shardingTotalCount}) = #{shardingItem}
+        AND message.task_status = #{taskStatus}
+        AND message.message_status = #{messageStatus}
+        AND message.create_time &lt; #{createTimeBefore}
+        AND message.yn = 0
+        ORDER BY update_time
+        LIMIT ${fetchNum}
+    </select>
+    <select id="listReliableMessageVoWithPage" resultType="com.iot.tpc.vo.TpcMessageVo">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        ,
+        <include refid="Blob_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        FROM
+        an_tpc_mq_message message
+        WHERE 1 = 1
+        <if test="messageKey != null and messageKey !=''">
+            AND message.message_key LIKE concat('%', #{messageKey,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="messageTopic != null and messageTopic !=''">
+            AND message.message_topic = #{messageTopic,jdbcType=VARCHAR}
+        </if>
+        <if test="messageTag != null and messageTag !=''">
+            AND message.message_tag = #{messageTag,jdbcType=VARCHAR}
+        </if>
+        <if test="producerGroup != null and producerGroup !=''">
+            AND message.producer_group = #{producerGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="messageStatus != null">
+            AND message.message_status = #{messageStatus,jdbcType=INTEGER}
+        </if>
+        <if test="startQueryTime != null and endQueryTime != null">
+            AND message.create_time BETWEEN #{startQueryTime} AND #{endQueryTime}
+        </if>
+        ORDER BY update_time desc
+    </select>
+
+    <resultMap id="TpcMqConsumerVoResultMap" extends="ResultMapWithBLOBs" type="com.iot.tpc.vo.TpcMessageVo">
+        <collection property="mqConfirmVoList" ofType="com.iot.tpc.vo.TpcMqConfirmVo">
+            <result property="consumerCode" column="consumerCode"/>
+            <result property="consumeCount" column="consumeCount"/>
+            <result property="createTime" column="confirmCreateTime"/>
+            <result property="updateTime" column="confirmUpdateTime"/>
+            <result property="status" column="confirmStatus"/>
+        </collection>
+    </resultMap>
+
+    <select id="listReliableMessageVo" resultMap="TpcMqConsumerVoResultMap">
+        SELECT
+        confirm.consumer_code as consumerCode,
+        confirm.consume_count as consumeCount,
+        confirm.create_time AS confirmCreateTime,
+        confirm.update_time AS confirmUpdateTime,
+        confirm.status as confirmStatus,
+        <include refid="Base_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        ,
+        <include refid="Blob_Column_List">
+            <property name="alias" value="message"/>
+        </include>
+        from an_tpc_mq_message message
+        LEFT JOIN an_tpc_mq_confirm confirm on message.id = confirm.message_id
+        WHERE message.id IN
+        <foreach collection="messageIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    
+</mapper>

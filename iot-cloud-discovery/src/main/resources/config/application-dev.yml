@@ -1,0 +1,9 @@
+spring:
+  aop:
+    proxy-target-class: true
+    auto: true
+
+ananops:
+  zk:
+    zkAddressList: iot-cloud-provider-zk:2181
+    namespace: iot-cloud-elastic-job

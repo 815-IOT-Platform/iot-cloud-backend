@@ -1,0 +1,9 @@
+server:
+  port: 8006
+
+spring:
+  application:
+    name: iot-cloud-auth
+  profiles:
+    active: dev
+

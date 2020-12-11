@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.tpc.mapper.TpcMqConfirmMapper">
+    
+    <resultMap type="TpcMqConfirm" id="BaseResultMap">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="messageId"    column="message_id"    />
+        <result property="messageKey"    column="message_key"    />
+        <result property="consumerCode"    column="consumer_code"    />
+        <result property="consumeCount"    column="consume_count"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectTpcMqConfirmVo">
+        select id, version, message_id, message_key, consumer_code, consume_count, status, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, company_id, company_name from an_tpc_mq_confirm
+    </sql>
+
+    <insert id="batchCreateMqConfirm">
+        insert into an_tpc_mq_confirm
+        (
+        id,
+        message_id,
+        message_key,
+        consumer_code)
+        VALUES
+        <foreach collection="tpcMqConfirmList" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT},
+            #{item.messageId,jdbcType=BIGINT},
+            #{item.messageKey,jdbcType=VARCHAR},
+            #{item.consumerCode,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <update id="confirmReceiveMessage">
+        UPDATE an_tpc_mq_confirm
+        SET status = 20, consume_count = consume_count + 1
+        WHERE id = #{cid} AND status = 10
+    </update>
+    <update id="confirmConsumedMessage">
+        UPDATE an_tpc_mq_confirm
+        SET status = 30
+        WHERE id = #{cid} AND status in (10, 20)
+    </update>
+    <select id="getIdMqConfirm" resultType="java.lang.Long">
+        SELECT id
+        FROM an_tpc_mq_confirm
+        WHERE consumer_code = #{cid} AND message_key = #{messageKey}
+    </select>
+    <select id="selectUnConsumedCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM an_tpc_mq_confirm
+        WHERE status in (10, 20) AND message_key = #{messageKey}
+    </select>
+    
+</mapper>

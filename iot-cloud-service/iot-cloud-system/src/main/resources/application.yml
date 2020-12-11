@@ -1,0 +1,14 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: ananops-system
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
+# MyBatis-Plus
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  typeAliasesPackage: com.ananops

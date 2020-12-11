@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.imc.mapper.IotImcInspectionItemMapper">
+    
+    <resultMap type="AnImcInspectionItem" id="AnImcInspectionItemResult">
+        <result property="id"    column="id"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="inspectionTaskId"    column="inspection_task_id"    />
+        <result property="scheduledStartTime"    column="scheduled_start_time"    />
+        <result property="actualStartTime"    column="actual_start_time"    />
+        <result property="actualFinishTime"    column="actual_finish_time"    />
+        <result property="days"    column="days"    />
+        <result property="frequency"    column="frequency"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="itemLatitude"    column="item_latitude"    />
+        <result property="itemLongitude"    column="item_longitude"    />
+        <result property="result"    column="result"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="maintainerId"    column="maintainer_id"    />
+        <result property="count"    column="count"    />
+        <result property="location"    column="location"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectAnImcInspectionItemVo">
+        select id, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, inspection_task_id, scheduled_start_time, actual_start_time, actual_finish_time, days, frequency, description, status, item_latitude, item_longitude, result, item_name, maintainer_id, count, location, remark, company_id, company_name from an_imc_inspection_item
+    </sql>
+
+    <select id="selectAnImcInspectionItemList" parameterType="AnImcInspectionItem" resultMap="AnImcInspectionItemResult">
+        <include refid="selectAnImcInspectionItemVo"/>
+        <where>
+            <if test="status != null">status = #{status}</if>
+            <if test="inspectionTaskId != null">and inspection_task_id = #{inspectionTaskId}</if>
+            <if test="maintainerId != null">and maintainer_id = #{maintainerId}</if>
+            <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
+        </where>
+        order by update_time desc
+    </select>
+    
+    <select id="selectAnImcInspectionItemById" parameterType="Long" resultMap="AnImcInspectionItemResult">
+        <include refid="selectAnImcInspectionItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnImcInspectionItem" parameterType="AnImcInspectionItem" useGeneratedKeys="true" keyProperty="id">
+        insert into an_imc_inspection_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="version != null ">version,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="inspectionTaskId != null ">inspection_task_id,</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time,</if>
+            <if test="actualStartTime != null ">actual_start_time,</if>
+            <if test="actualFinishTime != null ">actual_finish_time,</if>
+            <if test="days != null ">days,</if>
+            <if test="frequency != null ">frequency,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="status != null ">status,</if>
+            <if test="itemLatitude != null ">item_latitude,</if>
+            <if test="itemLongitude != null ">item_longitude,</if>
+            <if test="result != null  and result != ''">result,</if>
+            <if test="itemName != null  and itemName != ''">item_name,</if>
+            <if test="maintainerId != null ">maintainer_id,</if>
+            <if test="count != null ">count,</if>
+            <if test="location != null  and location != ''">location,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnImcInspectionItem" parameterType="AnImcInspectionItem">
+        update an_imc_inspection_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="inspectionTaskId != null ">inspection_task_id = #{inspectionTaskId},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="days != null ">days = #{days},</if>
+            <if test="frequency != null ">frequency = #{frequency},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="itemLatitude != null ">item_latitude = #{itemLatitude},</if>
+            <if test="itemLongitude != null ">item_longitude = #{itemLongitude},</if>
+            <if test="result != null  and result != ''">result = #{result},</if>
+            <if test="itemName != null  and itemName != ''">item_name = #{itemName},</if>
+            <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+            <if test="count != null ">count = #{count},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnImcInspectionItemById" parameterType="Long">
+        delete from an_imc_inspection_item where id = #{id}
+    </delete>
+
+    <delete id="deleteAnImcInspectionItemByIds" parameterType="String">
+        delete from an_imc_inspection_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="modifyItemStatus" parameterType="AnImcInspectionItem">
+        update an_imc_inspection_item as item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="inspectionTaskId != null ">inspection_task_id = #{inspectionTaskId},</if>
+            <if test="scheduledStartTime != null ">scheduled_start_time = #{scheduledStartTime},</if>
+            <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+            <if test="actualFinishTime != null ">actual_finish_time = #{actualFinishTime},</if>
+            <if test="days != null ">days = #{days},</if>
+            <if test="frequency != null ">frequency = #{frequency},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="itemLatitude != null ">item_latitude = #{itemLatitude},</if>
+            <if test="itemLongitude != null ">item_longitude = #{itemLongitude},</if>
+            <if test="result != null  and result != ''">result = #{result},</if>
+            <if test="itemName != null  and itemName != ''">item_name = #{itemName},</if>
+            <if test="maintainerId != null ">maintainer_id = #{maintainerId},</if>
+            <if test="count != null ">count = #{count},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where 1 = 1
+        and(
+        ( #{status} = 2 and item.status = 1 )
+        or
+        ( #{status} = 3 and item.status = 2 )
+        or
+        ( #{status} = 4 and item.status = 3 )
+        or
+        ( #{status} = 5 and item.status = 4 )
+        )
+        and item.id = #{id}
+    </update>
+
+    <select id="getAllFinishedImcItemByMaintainerId" parameterType="Long" resultMap="AnImcInspectionItemResult">
+        <include refid="selectAnImcInspectionItemVo"/> as item
+        where 1=1
+        and item.maintainer_id = #{maintainerId}
+        and item.status in (4,5)
+        order by item.update_time desc
+    </select>
+</mapper>

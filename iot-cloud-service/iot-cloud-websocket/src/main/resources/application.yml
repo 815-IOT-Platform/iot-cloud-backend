@@ -1,0 +1,10 @@
+server:
+  port: 7080
+spring:
+  application:
+    name: ananops-websocket
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

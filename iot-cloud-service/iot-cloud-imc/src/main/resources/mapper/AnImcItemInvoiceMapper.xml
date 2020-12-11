@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.imc.mapper.IotImcItemInvoiceMapper">
+    
+    <resultMap type="AnImcItemInvoice" id="AnImcItemInvoiceResult">
+        <result property="id"    column="id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="inspcItemId"    column="inspc_item_id"    />
+        <result property="pointName"    column="point_name"    />
+        <result property="pointAddress"    column="point_address"    />
+        <result property="inspcCompanyId"    column="inspc_company_id"    />
+        <result property="inspcCompany"    column="inspc_company"    />
+        <result property="inspcResult"    column="inspc_result"    />
+        <result property="inspcDate"    column="inspc_date"    />
+        <result property="userConfirm"    column="user_confirm"    />
+        <result property="engineerId"    column="engineer_id"    />
+        <result property="engineer"    column="engineer"    />
+        <result property="status"    column="status"    />
+        <result property="dr"    column="dr"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectAnImcItemInvoiceVo">
+        select id, template_id, inspc_item_id, point_name, point_address, inspc_company_id, inspc_company, inspc_result, inspc_date, user_confirm, engineer_id, engineer, status, dr, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, company_id, company_name from an_imc_item_invoice
+    </sql>
+
+    <select id="selectAnImcItemInvoiceList" parameterType="AnImcItemInvoice" resultMap="AnImcItemInvoiceResult">
+        <include refid="selectAnImcItemInvoiceVo"/>
+        <where>  
+            <if test="pointName != null  and pointName != ''"> and point_name like concat('%', #{pointName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAnImcItemInvoiceById" parameterType="Long" resultMap="AnImcItemInvoiceResult">
+        <include refid="selectAnImcItemInvoiceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnImcItemInvoice" parameterType="AnImcItemInvoice" useGeneratedKeys="true" keyProperty="id">
+        insert into an_imc_item_invoice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateId != null ">template_id,</if>
+            <if test="inspcItemId != null ">inspc_item_id,</if>
+            <if test="pointName != null  and pointName != ''">point_name,</if>
+            <if test="pointAddress != null  and pointAddress != ''">point_address,</if>
+            <if test="inspcCompanyId != null ">inspc_company_id,</if>
+            <if test="inspcCompany != null  and inspcCompany != ''">inspc_company,</if>
+            <if test="inspcResult != null  and inspcResult != ''">inspc_result,</if>
+            <if test="inspcDate != null ">inspc_date,</if>
+            <if test="userConfirm != null  and userConfirm != ''">user_confirm,</if>
+            <if test="engineerId != null ">engineer_id,</if>
+            <if test="engineer != null  and engineer != ''">engineer,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="dr != null  and dr != ''">dr,</if>
+            <if test="version != null ">version,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnImcItemInvoice" parameterType="AnImcItemInvoice">
+        update an_imc_item_invoice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateId != null ">template_id = #{templateId},</if>
+            <if test="inspcItemId != null ">inspc_item_id = #{inspcItemId},</if>
+            <if test="pointName != null  and pointName != ''">point_name = #{pointName},</if>
+            <if test="pointAddress != null  and pointAddress != ''">point_address = #{pointAddress},</if>
+            <if test="inspcCompanyId != null ">inspc_company_id = #{inspcCompanyId},</if>
+            <if test="inspcCompany != null  and inspcCompany != ''">inspc_company = #{inspcCompany},</if>
+            <if test="inspcResult != null  and inspcResult != ''">inspc_result = #{inspcResult},</if>
+            <if test="inspcDate != null ">inspc_date = #{inspcDate},</if>
+            <if test="userConfirm != null  and userConfirm != ''">user_confirm = #{userConfirm},</if>
+            <if test="engineerId != null ">engineer_id = #{engineerId},</if>
+            <if test="engineer != null  and engineer != ''">engineer = #{engineer},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="dr != null  and dr != ''">dr = #{dr},</if>
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnImcItemInvoiceById" parameterType="Long">
+        delete from an_imc_item_invoice where id = #{id}
+    </delete>
+
+    <delete id="deleteAnImcItemInvoiceByIds" parameterType="String">
+        delete from an_imc_item_invoice where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,10 @@
+server:
+  port: 8091
+spring:
+  application:
+    name: ananops-tpc
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true

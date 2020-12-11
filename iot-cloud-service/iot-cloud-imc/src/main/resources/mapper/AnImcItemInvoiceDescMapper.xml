@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.imc.mapper.IotImcItemInvoiceDescMapper">
+    
+    <resultMap type="AnImcItemInvoiceDesc" id="AnImcItemInvoiceDescResult">
+        <result property="id"    column="id"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="itemContent"    column="item_content"    />
+        <result property="itemState"    column="item_state"    />
+        <result property="itemResult"    column="item_result"    />
+        <result property="sort"    column="sort"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="creatorId"    column="creator_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="lastOperatorId"    column="last_operator_id"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
+    </resultMap>
+
+    <sql id="selectAnImcItemInvoiceDescVo">
+        select id, invoice_id, item_content, item_state, item_result, sort, version, create_by, creator_id, create_time, update_by, last_operator_id, update_time, remark, company_id, company_name from an_imc_item_invoice_desc
+    </sql>
+
+    <select id="selectAnImcItemInvoiceDescList" parameterType="AnImcItemInvoiceDesc" resultMap="AnImcItemInvoiceDescResult">
+        <include refid="selectAnImcItemInvoiceDescVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectAnImcItemInvoiceDescById" parameterType="Long" resultMap="AnImcItemInvoiceDescResult">
+        <include refid="selectAnImcItemInvoiceDescVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnImcItemInvoiceDesc" parameterType="AnImcItemInvoiceDesc" useGeneratedKeys="true" keyProperty="id">
+        insert into an_imc_item_invoice_desc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="invoiceId != null ">invoice_id,</if>
+            <if test="itemContent != null  and itemContent != ''">item_content,</if>
+            <if test="itemState != null  and itemState != ''">item_state,</if>
+            <if test="itemResult != null  and itemResult != ''">item_result,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="version != null ">version,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="creatorId != null ">creator_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="lastOperatorId != null ">last_operator_id,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="companyId != null ">company_id,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnImcItemInvoiceDesc" parameterType="AnImcItemInvoiceDesc">
+        update an_imc_item_invoice_desc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceId != null ">invoice_id = #{invoiceId},</if>
+            <if test="itemContent != null  and itemContent != ''">item_content = #{itemContent},</if>
+            <if test="itemState != null  and itemState != ''">item_state = #{itemState},</if>
+            <if test="itemResult != null  and itemResult != ''">item_result = #{itemResult},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="version != null ">version = #{version},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="creatorId != null ">creator_id = #{creatorId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="lastOperatorId != null ">last_operator_id = #{lastOperatorId},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="companyId != null ">company_id = #{companyId},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnImcItemInvoiceDescById" parameterType="Long">
+        delete from an_imc_item_invoice_desc where id = #{id}
+    </delete>
+
+    <delete id="deleteAnImcItemInvoiceDescByIds" parameterType="String">
+        delete from an_imc_item_invoice_desc where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
