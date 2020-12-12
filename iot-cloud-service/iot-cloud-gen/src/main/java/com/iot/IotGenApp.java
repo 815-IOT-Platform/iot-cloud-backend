@@ -9,7 +9,7 @@ import com.iot.system.annotation.EnableRyFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@MapperScan("com.ananops.*.mapper")
+@MapperScan("com.iot.*.mapper")
 @EnableRyFeignClients
 public class IotGenApp
 {

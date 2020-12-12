@@ -12,7 +12,7 @@ public @interface EnableRyFeignClients
 {
     String[] value() default {};
 
-    String[] basePackages() default {"com.ananops"};
+    String[] basePackages() default {"com.iot"};
 
     Class<?>[] basePackageClasses() default {};
 

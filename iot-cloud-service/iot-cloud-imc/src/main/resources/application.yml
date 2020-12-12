@@ -2,7 +2,7 @@ server:
   port: 9201
 spring:
   application:
-    name: ananops-imc
+    name: iot-cloud-imc
   profiles:
     active: dev
   devtools:

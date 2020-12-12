@@ -199,8 +199,4 @@ public interface ISysUserService
      * @author zmr
      */
     public Set<Long> selectUserIdsInDepts(Long[] deptIds);
-
-    void register(UserRegisterDto user);
-
-    void activeUser(String activeUserToken);
 }

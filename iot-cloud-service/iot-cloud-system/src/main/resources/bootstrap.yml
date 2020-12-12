@@ -4,13 +4,6 @@ logging:
     com.iot: debug
     org.springframework: warn
 spring:
-  rabbitmq:
-    username: guest
-    password: guest
-    host: 127.0.0.1
-    port: 5672
-    publisher-confirms: true
-    publisher-returns: true
   cloud:
     config:
       fail-fast: true
@@ -18,7 +11,7 @@ spring:
       profile: ${spring.profiles.active}
       discovery:
         enabled: true
-        service-id: ananops-discovery
+        service-id: iot-cloud-discovery
   main:
     allow-bean-definition-overriding: true
   jackson:
@@ -45,7 +38,7 @@ hystrix:
 eureka:
   client: #客户端注册进eureka服务列表内
     service-url:
-      defaultZone: http://ananops-eureka:8762/eureka
+      defaultZone: http://iot-cloud-eureka:8761/eureka
       #defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
   instance:
     instance-id: ${spring.application.name}:${server.port}

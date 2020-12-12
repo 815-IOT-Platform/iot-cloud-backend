@@ -2,7 +2,7 @@ server:
   port: 8001
 spring:
   application:
-    name: ananops-system
+    name: iot-cloud-system
   profiles:
     active: dev
   devtools:
@@ -11,4 +11,4 @@ spring:
 # MyBatis-Plus
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
-  typeAliasesPackage: com.ananops
+  typeAliasesPackage: com.iot

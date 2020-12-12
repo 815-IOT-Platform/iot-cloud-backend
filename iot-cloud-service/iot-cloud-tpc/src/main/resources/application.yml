@@ -2,7 +2,7 @@ server:
   port: 8091
 spring:
   application:
-    name: ananops-tpc
+    name: iot-cloud-tpc
   profiles:
     active: dev
   devtools:

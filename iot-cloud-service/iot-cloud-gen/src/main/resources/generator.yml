@@ -2,9 +2,9 @@
 # 代码生成
 gen: 
   # 作者
-  author: ananops
+  author: iot-cloud
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
-  packageName: com.ananops.system
+  packageName: com.iot.system
   # 自动去除表前缀，默认是true
   autoRemovePre: false
   # 表前缀(类名默认不会包含表前缀,当{autoRemovePre: false}时，类名包含表前缀)开发时改为自己的表前缀

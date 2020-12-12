@@ -39,7 +39,7 @@ public class MqConsumerStoreAspect {
 
 	@Resource
 	private MqMessageService mqMessageService;
-	@Value("${ananops.rocketmq.consumerGroup}")
+	@Value("${iot-cloud.rocketmq.consumerGroup}")
 	private String consumerGroup;
 
 	private static final String CONSUME_SUCCESS = "CONSUME_SUCCESS";

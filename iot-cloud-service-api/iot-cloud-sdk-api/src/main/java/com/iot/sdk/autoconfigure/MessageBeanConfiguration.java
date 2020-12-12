@@ -23,13 +23,13 @@ import org.springframework.context.annotation.Configuration;
 public class MessageBeanConfiguration {
 
 	@Bean
-	@ConditionalOnExpression("${ananops.rocketmq.reliableMessageConsumer:true}")
+	@ConditionalOnExpression("${iot-cloud.rocketmq.reliableMessageConsumer:true}")
 	public MqConsumerStoreAspect mqConsumerStoreAspect() {
 		return new MqConsumerStoreAspect();
 	}
 
 	@Bean
-	@ConditionalOnExpression("${ananops.rocketmq.reliableMessageProducer:true}")
+	@ConditionalOnExpression("${iot-cloud.rocketmq.reliableMessageProducer:true}")
 	public MqProducerStoreAspect mqProducerStoreAspect() {
 		return new MqProducerStoreAspect();
 	}

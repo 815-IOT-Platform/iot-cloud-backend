@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import com.iot.common.redis.util.RedisKeyUtil;
 import com.iot.common.utils.RandomUtil;
 import com.iot.system.dto.UserRegisterDto;
-import com.iot.system.manager.UserManager;
 import com.iot.system.service.RedisService;
 import com.iot.system.util.PasswordUtil;
 import com.google.common.base.Preconditions;
@@ -69,10 +68,8 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     private ISysConfigService   configService;
 
-    @Autowired
-    private UserManager userManager;
 
-    @Value("${ananops.auth.active-user-url}")
+    @Value("${iot-cloud.auth.active-user-url}")
     private String activeUserUrl;
 
     @Resource
@@ -520,62 +517,6 @@ public class SysUserServiceImpl implements ISysUserService
         return ArrayUtil.isNotEmpty(deptIds) ? userMapper.selectUserIdsInDepts(deptIds) : null;
     }
 
-    @Override
-    public void register(UserRegisterDto registerDto) {
-        // 校验注册信息
-        validateRegisterInfo(registerDto);
-        String phonenumber = registerDto.getPhonenumber();
-        String email = registerDto.getEmail();
-        Date row = new Date();
-        // 封装注册信息
-        SysUser sysUser = new SysUser();
-        sysUser.setLoginName(registerDto.getLoginName());
-        sysUser.setSalt(RandomUtil.randomStr(6));
-        sysUser.setPassword(PasswordUtil.encryptPassword(sysUser.getLoginName(), sysUser.getPassword(), sysUser.getSalt()));
-        sysUser.setPhonenumber(phonenumber);
-        sysUser.setStatus("1");  //停用
-        sysUser.setCreateTime(row);
-        sysUser.setUpdateTime(row);
-        sysUser.setEmail(email);
-        sysUser.setCreateBy(registerDto.getLoginName());
-        sysUser.setUserName(registerDto.getLoginName());
-        sysUser.setUpdateBy(registerDto.getLoginName());
-        sysUser.setCompanyId(registerDto.getCompanyId());
-        sysUser.setCompanyName(registerDto.getCompanyName());
-
-        // 发送激活邮件
-        String activeToken = UUID.randomUUID().toString();
-        redisService.setKey(RedisKeyUtil.getActiveUserKey(activeToken), email, 1, TimeUnit.DAYS);
-
-        String param =  activeUserUrl + activeToken;
-
-
-        Set<String> to = Sets.newHashSet();
-        to.add(registerDto.getEmail());
-
-        userManager.register(sysUser,param);
-
-    }
-
-    @Override
-    public void activeUser(String activeUserToken) {
-        Preconditions.checkArgument(!org.springframework.util.StringUtils.isEmpty(activeUserToken), "激活用户失败");
-        String activeUserKey = RedisKeyUtil.getActiveUserKey(activeUserToken);
-
-        String email = redisService.getKey(activeUserKey);
-
-        if (org.springframework.util.StringUtils.isEmpty(email)) {
-            throw new BusinessException("激活失败, 链接已过期");
-        }
-        // 修改用户状态, 绑定访客角色
-        SysUser sysUser = this.selectUserByEmail(email);
-        if (sysUser == null) {
-            log.error("找不到用户信息. email={}", email);
-            throw new BusinessException("找不到用户信息");
-        }
-        sysUser.setStatus("0");
-        userManager.activeUser( sysUser, activeUserKey);
-    }
 
     private void validateRegisterInfo(UserRegisterDto registerDto) {
         String mobileNo = registerDto.getPhonenumber();

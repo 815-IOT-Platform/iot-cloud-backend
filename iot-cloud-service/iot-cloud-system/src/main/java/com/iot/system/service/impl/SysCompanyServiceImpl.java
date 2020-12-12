@@ -119,46 +119,6 @@ public class SysCompanyServiceImpl implements ISysCompanyService {
         return sysCompanyMapper.selectSysCompanyByDeptId(deptId);
     }
 
-    @Override
-    public void register(CompanyRegisterDto company) {
-        // 校验注册信息
-        validateRegisterInfo(company);
-
-        // 构建UAC User注册Dto
-        UserRegisterDto userRegisterDto = new UserRegisterDto();
-        SysCompany sysCompany = new SysCompany();
-        Long companyId = UniqueIdGenerator.generateId();
-        try {
-            // 绑定用户注册信息
-            BeanUtils.copyProperties(company,userRegisterDto);
-            userRegisterDto.setLoginName(company.getCompanyName());
-            userRegisterDto.setPhonenumber(company.getPhonenumber());
-            userRegisterDto.setCompanyName(company.getCompanyName());
-            userRegisterDto.setCompanyId(companyId);
-
-            // 绑定公司注册信息
-            BeanUtils.copyProperties(company,sysCompany);
-            sysCompany.setId(companyId);
-        } catch (Exception e) {
-            log.error("服务商Dto与用户Dto属性拷贝异常");
-            e.printStackTrace();
-        }
-        log.info("注册用户. userRegisterDto={}", userRegisterDto);
-        sysUserService.register(userRegisterDto);
-        SysUser userByEmail = sysUserService.selectUserByEmail(userRegisterDto.getEmail());
-        log.info("注册用户成功userId:{}",userByEmail.getUserId());
-
-        // 构造创建对象信息
-        LoginAuthDto loginAuthDto = new LoginAuthDto();
-        loginAuthDto.setUserId(userByEmail.getUserId());
-        loginAuthDto.setUserName(userByEmail.getUserName());
-        loginAuthDto.setUserName(company.getCompanyName());
-        loginAuthDto.setLoginName(company.getCompanyName());
-
-        sysCompany.setUserId(userByEmail.getUserId());
-        log.info("注册组织. sysCompany={}", sysCompany);
-        this.insertSysCompany(sysCompany,loginAuthDto);
-    }
 
     /**
      * 校验注册信息

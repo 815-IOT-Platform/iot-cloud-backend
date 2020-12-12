@@ -13,7 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableEurekaClient
 @EnableRyFeignClients
-@MapperScan("com.ananops.*.mapper")
+@MapperScan("com.iot.*.mapper")
 public class IotWebsocketApp {
 
     public static void main(String[] args) {

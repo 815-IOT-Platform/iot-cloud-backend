@@ -68,6 +68,4 @@ public interface ISysCompanyService {
      * @return
      */
     SysCompany selectSysCompanyByDeptId(SysDept sysDept);
-
-    void register(CompanyRegisterDto company);
 }

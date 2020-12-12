@@ -40,7 +40,7 @@ public class MqProducerStoreAspect implements Ordered {
 	@Resource
 	private MqMessageService mqMessageService;
 
-	@Value("${ananops.rocketmq.producerGroup}")
+	@Value("${iot-cloud.rocketmq.producerGroup}")
 	private String producerGroup;
 
 	@Resource

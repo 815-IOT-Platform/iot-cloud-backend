@@ -11,7 +11,7 @@ spring:
       profile: ${spring.profiles.active}
       discovery:
         enabled: true
-        service-id: ananops-discovery
+        service-id: iot-cloud-discovery
   main:
     allow-bean-definition-overriding: true
   jackson:
@@ -26,7 +26,7 @@ feign:
 eureka:
   client: #客户端注册进eureka服务列表内
     service-url:
-      defaultZone: http://ananops-eureka:8762/eureka
+      defaultZone: http://iot-cloud-eureka:8761/eureka
       #defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
   instance:
     instance-id: ${spring.application.name}:${server.port}
@@ -37,7 +37,7 @@ eureka:
 # MyBatis
 mybatis:
   # 搜索指定包别名
-  typeAliasesPackage: com.ananops
+  typeAliasesPackage: com.iot
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/**/*Mapper.xml
 

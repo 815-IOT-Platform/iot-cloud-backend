@@ -17,7 +17,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableEurekaClient
 @EnableRyFeignClients
-@MapperScan("com.ananops.*.mapper")
+@MapperScan("com.iot.*.mapper")
 //@EnableScheduling
 public class IotSystemApp
 {
