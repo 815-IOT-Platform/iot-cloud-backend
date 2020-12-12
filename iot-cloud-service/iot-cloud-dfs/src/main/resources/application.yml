@@ -1,6 +1,5 @@
 server:
-  port: 8006
-
+  port: 8007
 spring:
   application:
     name: iot-cloud-dfs

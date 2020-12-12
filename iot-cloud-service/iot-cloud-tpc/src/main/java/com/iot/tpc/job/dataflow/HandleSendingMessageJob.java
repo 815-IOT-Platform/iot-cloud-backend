@@ -30,12 +30,12 @@ import java.util.List;
 public class HandleSendingMessageJob extends AbstractBaseDataflowJob<TpcMqMessage> {
     @Resource
     private ITpcMqMessageService tpcMqMessageService;
-    @Value("${ananops.message.handleTimeout}")
+    @Value("${iot-cloud.message.handleTimeout}")
     private int timeOutMinute;
-    @Value("${ananops.message.maxSendTimes}")
+    @Value("${iot-cloud.message.maxSendTimes}")
     private int messageMaxSendTimes;
 
-    @Value("${ananops.message.resendMultiplier}")
+    @Value("${iot-cloud.message.resendMultiplier}")
     private int messageResendMultiplier;
     @Resource
     private TpcMqConfirmMapper tpcMqConfirmMapper;

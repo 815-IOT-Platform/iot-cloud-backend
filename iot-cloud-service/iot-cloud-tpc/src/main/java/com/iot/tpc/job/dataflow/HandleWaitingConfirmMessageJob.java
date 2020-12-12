@@ -34,7 +34,7 @@ public class HandleWaitingConfirmMessageJob extends AbstractBaseDataflowJob<Stri
 	@Autowired
 	private ImcRpcService imcRpcService;
 
-	@Value("${ananops.message.handleTimeout}")
+	@Value("${iot-cloud.message.handleTimeout}")
 	private int timeOutMinute;
 	private static final String PID_CLOUD_IMC = "PID_CLOUD_IMC";
 

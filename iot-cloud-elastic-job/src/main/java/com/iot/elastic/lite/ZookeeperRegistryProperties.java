@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author ananops.com @gmail.com
  */
 @Data
-@ConfigurationProperties(prefix = "ananops.zk")
+@ConfigurationProperties(prefix = "iot-cloud.zk")
 public class ZookeeperRegistryProperties {
 
     /**

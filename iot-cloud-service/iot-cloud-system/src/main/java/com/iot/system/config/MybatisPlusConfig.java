@@ -29,7 +29,7 @@ import net.sf.jsqlparser.expression.LongValue;
  */
 @Slf4j
 @Configuration
-@MapperScan("com.ananops.system.mapper*")
+@MapperScan("com.iot.system.mapper*")
 public class MybatisPlusConfig {
     @Autowired
     private LoginAuthUtil loginAuthUtil;
@@ -96,20 +96,20 @@ public class MybatisPlusConfig {
             public boolean doFilter(MetaObject metaObject) {
                 MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
                 // 过滤自定义查询此时无租户信息约束【 麻花藤 】出现
-                if ("com.ananops.system.mapper.SysUserMapper.selectUserByLoginName".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.selectUserById".equals(ms.getId())
+                if ("com.iot.system.mapper.SysUserMapper.selectUserByLoginName".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.selectUserById".equals(ms.getId())
 
-                        || "com.ananops.system.mapper.SysUserMapper.selectUserByEmail".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.recordLoginInfo".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.checkLoginNameUnique".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.checkPhoneUnique".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.checkEmailUnique".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.insertUser".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserMapper.updateUser".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysUserRoleMapper.batchUserRole".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysRoleMapper.selectRoleList".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysRoleMapper.selectRolesByUserId".equals(ms.getId())
-                        || "com.ananops.system.mapper.SysRoleMapper.selectRoleById".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.selectUserByEmail".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.recordLoginInfo".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.checkLoginNameUnique".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.checkPhoneUnique".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.checkEmailUnique".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.insertUser".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserMapper.updateUser".equals(ms.getId())
+                        || "com.iot.system.mapper.SysUserRoleMapper.batchUserRole".equals(ms.getId())
+                        || "com.iot.system.mapper.SysRoleMapper.selectRoleList".equals(ms.getId())
+                        || "com.iot.system.mapper.SysRoleMapper.selectRolesByUserId".equals(ms.getId())
+                        || "com.iot.system.mapper.SysRoleMapper.selectRoleById".equals(ms.getId())
                 ) {
                     return true;
                 }

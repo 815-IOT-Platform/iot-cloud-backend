@@ -8,20 +8,20 @@ public interface ServiceNameConstants
     /**
      * system模块
      */
-    String SYSTEM_SERVICE = "ananops-system";
+    String SYSTEM_SERVICE = "iot-cloud-system";
 
     /**
      * websocket模块
      */
-    String WEBSOCKET_SERVICE = "ananops-websocket";
+    String WEBSOCKET_SERVICE = "iot-cloud-websocket";
 
     /**
      * tpc模块
      */
-    String TPC_SERVICE = "ananops-tpc";
+    String TPC_SERVICE = "iot-cloud-tpc";
 
     /**
      * imc模块
      */
-    String IMC_SERVICE = "ananops-imc";
+    String IMC_SERVICE = "iot-cloud-imc";
 }

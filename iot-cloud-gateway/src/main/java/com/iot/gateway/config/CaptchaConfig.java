@@ -34,7 +34,7 @@ public class CaptchaConfig
         // KAPTCHA_SESSION_KEY
         properties.setProperty("kaptcha.session.key", "kaptchaCodeMath");
         // 验证码文本生成器
-        properties.setProperty("kaptcha.textproducer.impl", "com.ananops.gateway.config.KaptchaTextCreator");
+        properties.setProperty("kaptcha.textproducer.impl", "com.iot.gateway.config.KaptchaTextCreator");
         // 验证码文本字符间距 默认为2
         properties.setProperty("kaptcha.textproducer.char.space", "3");
         // 验证码文本字符长度 默认为5
