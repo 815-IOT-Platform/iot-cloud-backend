@@ -136,10 +136,10 @@
             <version>5.2.4.RELEASE</version>
         </dependency>
 
-        <!-- 系统模块 -->
+        <!-- 系统核心组件 -->
         <dependency>
             <groupId>com.iot-cloud</groupId>
-            <artifactId>iot-cloud-system-api</artifactId>
+            <artifactId>iot-cloud-common-core</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
