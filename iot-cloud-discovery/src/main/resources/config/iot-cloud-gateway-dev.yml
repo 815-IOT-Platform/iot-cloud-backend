@@ -14,7 +14,7 @@ spring:
   cloud:
     gateway:
       #白名单列表
-      whiteList: /auth/login,/auth/user/login,/auth/cas/client/validateLogin,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/ws/ws,/websocket/v2/api-docs,/system/auth/activeUser/*,/system/auth/register,/system/auth/registerCompany,/tpc/v2/api-docs
+      whiteList: /auth/login,/auth/user/login,/auth/cas/client/validateLogin,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/ws/ws,/websocket/v2/api-docs,/system/auth/activeUser/*,/system/auth/register,/system/auth/registerCompany,/tpc/v2/api-docs,/device/v2/api-docs
       discovery:
         locator:
           enabled: true
@@ -109,6 +109,20 @@ spring:
           uri: lb://iot-cloud-tpc
           predicates:
             - Path=/tpc/**
+          filters:
+            # 限流配置
+            - StripPrefix=1
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: fallbackcmd
+                fallbackUri: 'forward:/fallback'
+
+        # device模块
+        - id: iot-cloud-device
+          uri: lb://iot-cloud-device
+          predicates:
+            - Path=/device/**
           filters:
             # 限流配置
             - StripPrefix=1
