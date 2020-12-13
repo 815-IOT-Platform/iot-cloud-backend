@@ -19,5 +19,6 @@
         <module>iot-cloud-websocket</module>
         <module>iot-cloud-tpc</module>
         <module>iot-cloud-device</module>
+        <module>iot-cloud-honeyBot</module>
     </modules>
 </project>

@@ -1,0 +1,10 @@
+server:
+  port: 8251
+spring:
+  application:
+    name: iot-cloud-honeyBot
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
