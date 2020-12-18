@@ -116,7 +116,7 @@ public class DeviceServiceImpl implements DeviceService {
                     .getMatchExpressions().get(0).getValues().get(0));
             deviceDto.setDeviceName(edgeDevice.getMetadata().getName());
             deviceDto.setDescription(edgeDevice.getMetadata().getLabels().get("description"));
-            deviceDto.setDescription(edgeDevice.getMetadata().getLabels().get("model"));
+            deviceDto.setModel(edgeDevice.getMetadata().getLabels().get("model"));
             deviceDtos.add(deviceDto);
         }
         return deviceDtos;
