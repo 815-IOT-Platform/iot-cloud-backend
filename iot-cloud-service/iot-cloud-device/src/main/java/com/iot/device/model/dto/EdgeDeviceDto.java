@@ -1,6 +1,5 @@
 package com.iot.device.model.dto;
 
-import com.iot.device.model.dto.EdgeDeviceTwinDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

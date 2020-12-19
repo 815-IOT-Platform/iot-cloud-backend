@@ -1,4 +1,4 @@
-package com.iot.device.model.domain.modelType;
+package com.iot.device.model.crd.modelType;
 
 import lombok.Data;
 

@@ -2,7 +2,7 @@ package com.iot.device.service.impl;
 
 
 
-import com.iot.device.model.domain.device.*;
+import com.iot.device.model.crd.device.*;
 import com.iot.device.model.dto.EdgeDeviceDto;
 import com.iot.device.service.DeviceService;
 import io.fabric8.kubernetes.api.model.NodeSelector;

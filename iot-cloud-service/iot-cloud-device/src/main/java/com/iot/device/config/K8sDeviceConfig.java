@@ -1,9 +1,9 @@
 package com.iot.device.config;
 
 
-import com.iot.device.model.domain.device.DeviceList;
-import com.iot.device.model.domain.device.DoneableDevice;
-import com.iot.device.model.domain.device.EdgeDevice;
+import com.iot.device.model.crd.device.DeviceList;
+import com.iot.device.model.crd.device.DoneableDevice;
+import com.iot.device.model.crd.device.EdgeDevice;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionList;
@@ -12,9 +12,9 @@ import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
-import com.iot.device.model.domain.deviceModel.DeviceModelList;
-import com.iot.device.model.domain.deviceModel.DoneableDeviceModel;
-import com.iot.device.model.domain.deviceModel.EdgeDeviceModel;
+import com.iot.device.model.crd.deviceModel.DeviceModelList;
+import com.iot.device.model.crd.deviceModel.DoneableDeviceModel;
+import com.iot.device.model.crd.deviceModel.EdgeDeviceModel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

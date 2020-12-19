@@ -1,4 +1,4 @@
-package com.iot.device.model.domain.modelType;
+package com.iot.device.model.crd.modelType;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

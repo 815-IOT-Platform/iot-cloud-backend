@@ -1,4 +1,4 @@
-package com.iot.device.model.domain.deviceModel;
+package com.iot.device.model.crd.deviceModel;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

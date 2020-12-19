@@ -1,4 +1,4 @@
-package com.iot.device.model.domain.deviceModel;
+package com.iot.device.model.crd.deviceModel;
 
 import io.fabric8.kubernetes.api.model.Namespaced;
 import io.fabric8.kubernetes.client.CustomResource;

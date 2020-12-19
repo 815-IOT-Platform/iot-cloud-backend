@@ -1,4 +1,4 @@
-package com.iot.device.model.domain.device;
+package com.iot.device.model.crd.device;
 
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatus;
 import lombok.Data;

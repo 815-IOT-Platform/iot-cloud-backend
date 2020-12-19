@@ -1,8 +1,8 @@
-package com.iot.device.model.domain.deviceModel;
+package com.iot.device.model.crd.deviceModel;
 
 
 
-import com.iot.device.model.domain.modelType.ModelType;
+import com.iot.device.model.crd.modelType.ModelType;
 import lombok.Data;
 
 import java.io.Serializable;
