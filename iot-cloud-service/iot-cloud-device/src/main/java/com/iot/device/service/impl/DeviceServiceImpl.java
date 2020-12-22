@@ -1,9 +1,9 @@
 package com.iot.device.service.impl;
 
 
-
+import com.iot.device.dto.EdgeDeviceDto;
+import com.iot.device.dto.EdgeDeviceTwinDto;
 import com.iot.device.model.crd.device.*;
-import com.iot.device.model.dto.EdgeDeviceDto;
 import com.iot.device.service.DeviceService;
 import io.fabric8.kubernetes.api.model.NodeSelector;
 import io.fabric8.kubernetes.api.model.NodeSelectorRequirement;
@@ -12,7 +12,6 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.client.CustomResourceList;
 import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
-import com.iot.device.model.dto.EdgeDeviceTwinDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

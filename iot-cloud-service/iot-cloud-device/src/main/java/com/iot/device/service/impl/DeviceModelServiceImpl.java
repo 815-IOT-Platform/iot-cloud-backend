@@ -1,18 +1,18 @@
 package com.iot.device.service.impl;
 
 
+import com.iot.device.dto.DeviceModelPropertyDto;
+import com.iot.device.dto.EdgeDeviceModelDto;
 import com.iot.device.model.crd.deviceModel.*;
+import com.iot.device.model.crd.modelType.DoubleType;
+import com.iot.device.model.crd.modelType.IntType;
 import com.iot.device.model.crd.modelType.ModelType;
+import com.iot.device.model.crd.modelType.StringType;
+import com.iot.device.service.DeviceModelService;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.client.CustomResourceList;
 import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
-import com.iot.device.model.crd.modelType.DoubleType;
-import com.iot.device.model.crd.modelType.IntType;
-import com.iot.device.model.crd.modelType.StringType;
-import com.iot.device.model.dto.DeviceModelPropertyDto;
-import com.iot.device.model.dto.EdgeDeviceModelDto;
-import com.iot.device.service.DeviceModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

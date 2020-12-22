@@ -85,3 +85,13 @@ iot-cloud:
 
   kubernetes:
     master: iot-cloud-k8s:8080
+
+rocketmq:
+  consumer:
+    isOnOff: on
+    groupName: iot-cloud-device-consumer
+    namesrvAddr: iot-cloud-mq-rocket:9876
+    topics: device-data,*
+    consumeThreadMin: 5
+    consumeThreadMax: 32
+    consumeMessageBatchMaxSize: 1

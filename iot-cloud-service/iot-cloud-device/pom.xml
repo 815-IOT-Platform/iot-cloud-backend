@@ -62,6 +62,18 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.iot-cloud</groupId>
+            <artifactId>iot-cloud-websocket-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.iot-cloud</groupId>
+            <artifactId>iot-cloud-device-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!--阿里数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>

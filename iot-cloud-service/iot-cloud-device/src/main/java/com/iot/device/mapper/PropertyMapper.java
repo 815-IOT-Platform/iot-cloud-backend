@@ -1,4 +1,7 @@
 package com.iot.device.mapper;
 
-public interface PropertyMapper {
+import com.iot.common.core.dao.BaseMapper;
+import com.iot.device.model.domain.Property;
+
+public interface PropertyMapper extends BaseMapper<Property> {
 }

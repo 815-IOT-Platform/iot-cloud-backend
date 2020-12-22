@@ -1,7 +1,8 @@
 package com.iot.device.service;
 
 
-import com.iot.device.model.dto.EdgeDeviceDto;
+
+import com.iot.device.dto.EdgeDeviceDto;
 
 import java.util.List;
 

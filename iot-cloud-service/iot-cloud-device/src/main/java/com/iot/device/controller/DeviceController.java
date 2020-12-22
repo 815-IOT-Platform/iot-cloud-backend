@@ -1,7 +1,8 @@
 package com.iot.device.controller;
 
 
-import com.iot.device.model.dto.EdgeDeviceDto;
+
+import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

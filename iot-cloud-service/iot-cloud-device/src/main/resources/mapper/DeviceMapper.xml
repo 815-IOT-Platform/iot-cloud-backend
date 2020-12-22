@@ -19,4 +19,27 @@
         <result property="nodeId"    column="node_id"    />
     </resultMap>
 
+<!--    <insert id="insertDevice" parameterType="Device" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into an_imc_inspection_item_log-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="version != null ">version,</if>-->
+<!--            <if test="createBy != null  and createBy != ''">create_by,</if>-->
+<!--            <if test="creatorId != null ">creator_id,</if>-->
+<!--            <if test="createTime != null ">create_time,</if>-->
+<!--            <if test="updateBy != null  and updateBy != ''">update_by,</if>-->
+<!--            <if test="lastOperatorId != null ">last_operator_id,</if>-->
+<!--            <if test="updateTime != null ">update_time,</if>-->
+<!--            <if test="taskId != null ">task_id,</if>-->
+<!--            <if test="status != null ">status,</if>-->
+<!--            <if test="statusTimestamp != null ">status_timestamp,</if>-->
+<!--            <if test="movement != null  and movement != ''">movement,</if>-->
+<!--            <if test="itemId != null ">item_id,</if>-->
+<!--            <if test="os != null  and os != ''">os,</if>-->
+<!--            <if test="browser != null  and browser != ''">browser,</if>-->
+<!--            <if test="ipAddress != null  and ipAddress != ''">ip_address,</if>-->
+<!--            <if test="remark != null  and remark != ''">remark,</if>-->
+<!--            <if test="companyId != null ">company_id,</if>-->
+<!--            <if test="companyName != null and companyName != ''">company_name,</if>-->
+<!--        </trim>-->
+<!--    </insert>-->
 </mapper>

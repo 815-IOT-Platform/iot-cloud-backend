@@ -15,6 +15,7 @@
         <module>iot-cloud-websocket-api</module>
         <module>iot-cloud-tpc-api</module>
         <module>iot-cloud-sdk-api</module>
+        <module>iot-cloud-device-api</module>
     </modules>
     <dependencies>
         <dependency>
