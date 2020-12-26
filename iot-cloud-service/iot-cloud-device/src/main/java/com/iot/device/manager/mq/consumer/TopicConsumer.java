@@ -1,6 +1,7 @@
 package com.iot.device.manager.mq.consumer;
 
 import com.iot.common.core.mq.MqMessage;
+import com.iot.device.config.DictConfig;
 import com.iot.device.dto.DeviceDto;
 import com.iot.device.util.JacksonUtil;
 import com.iot.websocket.dto.MsgDto;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by huqiaoqian on 2020/10/28
@@ -20,6 +23,8 @@ public class TopicConsumer {
 
     @Autowired
     private RemoteWebSocketService remoteWebSocketService;
+    @Autowired
+    private DictConfig dictConfig;
 
     public void handlerSendMqMsg(String body, String topicName, String tags, String keys){
         log.info("handlerSendMqMsg:body={},topicName={},tags={},keys={}",body,topicName,tags,keys);
@@ -35,6 +40,14 @@ public class TopicConsumer {
             return;
         }
         MsgDto<DeviceDto> msgDto = new MsgDto<>();
+        Map<String,String> properties=deviceDto.getProperties();
+        Map<String,String> dictPro=new HashMap<>();
+        if(properties!=null&&dictConfig!=null&&dictConfig.getDeviceDict()!=null){
+            properties.forEach((k,v) -> {
+                dictPro.put(dictConfig.getDeviceDict().getOrDefault(k,k),v);
+            });
+        }
+        deviceDto.setProperties(dictPro);
         msgDto.setMsg(deviceDto);
         msgDto.setMsgType("Device");
         msgDto.setId(deviceDto.getDeviceName());
