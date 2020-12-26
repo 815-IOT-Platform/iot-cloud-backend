@@ -12,5 +12,6 @@ import java.util.Map;
 public class DeviceDto implements Serializable {
     private static final long serialVersionUID = 7207636209857137856L;
     private String deviceName;
+    private String propertyType;
     private Map<String,String> properties;
 }
