@@ -3,9 +3,11 @@ package com.iot.device.controller;
 
 
 import com.iot.device.dto.EdgeDeviceDto;
+import com.iot.device.model.crd.device.EdgeDevice;
 import com.iot.device.service.DeviceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,12 @@ public class DeviceController {
     @ApiOperation( "获取全部设备")
     public List<EdgeDeviceDto> getAllDevice() {
         return deviceService.getAllDevice();
+    }
+
+    @GetMapping("getDevice/{deviceName}")
+    @ApiOperation("获取指定设备")
+    public EdgeDeviceDto getDevice(@PathVariable String deviceName) {
+        return deviceService.getDevice(deviceName);
     }
 
 }

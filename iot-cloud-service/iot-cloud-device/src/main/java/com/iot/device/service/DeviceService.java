@@ -14,4 +14,6 @@ public interface DeviceService {
 
     public List<EdgeDeviceDto> getAllDevice();
 
+    public EdgeDeviceDto getDevice(String deviceName);
+
 }
