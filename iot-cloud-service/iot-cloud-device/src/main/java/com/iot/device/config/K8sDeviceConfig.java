@@ -15,6 +15,7 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 import com.iot.device.model.crd.deviceModel.DeviceModelList;
 import com.iot.device.model.crd.deviceModel.DoneableDeviceModel;
 import com.iot.device.model.crd.deviceModel.EdgeDeviceModel;
+import io.fabric8.kubernetes.client.dsl.base.CustomResourceDefinitionContext;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,19 +44,19 @@ public class K8sDeviceConfig {
         CustomResourceDefinitionList crds = k8sClient.customResourceDefinitions().list();
         List<CustomResourceDefinition> crdsItems = crds.getItems();
         System.out.println("Found " + crdsItems.size() + " CRD(s)");
-        CustomResourceDefinition deviceCRD = null;
+        CustomResourceDefinitionContext deviceCrdCtx = null;
         for (CustomResourceDefinition crd : crdsItems) {
             ObjectMeta metadata = crd.getMetadata();
             if (metadata != null) {
                 String name = metadata.getName();
-                System.out.println("    " + name + " => " + metadata.getSelfLink());
+                System.out.println("    " + name + " => " + metadata.getName());
                 if (DEVICE_CRD_NAME.equals(name)) {
-                    deviceCRD = crd;
+                    deviceCrdCtx = CustomResourceDefinitionContext.fromCrd(crd);
                 }
             }
         }
         NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient =
-                k8sClient.customResources(deviceCRD, EdgeDevice.class, DeviceList.class, DoneableDevice.class);
+                k8sClient.customResources(deviceCrdCtx, EdgeDevice.class, DeviceList.class, DoneableDevice.class).inNamespace("default");
         deviceClient.watch(new Watcher<EdgeDevice>() {
             @Override
             public void eventReceived(Action action, EdgeDevice resource) {

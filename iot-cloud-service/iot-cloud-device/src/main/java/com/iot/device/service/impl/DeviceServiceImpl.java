@@ -10,8 +10,10 @@ import io.fabric8.kubernetes.api.model.NodeSelectorRequirement;
 import io.fabric8.kubernetes.api.model.NodeSelectorTerm;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.client.CustomResourceList;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +25,17 @@ import java.util.Map;
 /**
  * Created by huqiaoqian on 2020/10/14
  */
+@Slf4j
 @Service
 public class DeviceServiceImpl implements DeviceService {
 
 
     @Autowired
     private NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient;
+
+    @Autowired
+    private KubernetesClient k8sClient;
+
 
 
     @Override
@@ -94,14 +101,19 @@ public class DeviceServiceImpl implements DeviceService {
         List<EdgeDevice> devices=deviceList.getItems();
         List<EdgeDeviceDto> deviceDtos=new ArrayList<>();
         for(EdgeDevice edgeDevice:devices){
+            log.info("deviceName is {}",edgeDevice.getMetadata().getName());
             EdgeDeviceDto deviceDto=new EdgeDeviceDto();
             List<DeviceTwin> deviceTwins=edgeDevice.getStatus().getTwins();
             List<EdgeDeviceTwinDto> deviceTwinDtos=new ArrayList<>();
             for(DeviceTwin twin:deviceTwins){
                 EdgeDeviceTwinDto deviceTwinDto=new EdgeDeviceTwinDto();
                 deviceTwinDto.setPropertyName(twin.getPropertyName());
-                deviceTwinDto.setRequireType(twin.getDesired().getMetadata().getType());
-                deviceTwinDto.setRequireValue(twin.getDesired().getValue());
+                if (twin.getDesired()!=null && twin.getDesired().getMetadata() != null) {
+                    deviceTwinDto.setRequireType(twin.getDesired().getMetadata().getType());
+                }
+                if (twin.getDesired() != null) {
+                    deviceTwinDto.setRequireValue(twin.getDesired().getValue());
+                }
                 if(twin.getReported()!=null){
                     deviceTwinDto.setReportedTime(twin.getReported().getMetadata().getTimestamp());
                     deviceTwinDto.setReportedType(twin.getReported().getMetadata().getType());
@@ -119,6 +131,39 @@ public class DeviceServiceImpl implements DeviceService {
             deviceDtos.add(deviceDto);
         }
         return deviceDtos;
+    }
+
+    @Override
+    public EdgeDeviceDto getDevice(String deviceName) {
+        EdgeDevice edgeDevice = deviceClient.withName(deviceName).get();
+        log.info("edgeDevice is {}", edgeDevice);
+        EdgeDeviceDto deviceDto = new EdgeDeviceDto();
+        List<DeviceTwin> deviceTwins=edgeDevice.getStatus().getTwins();
+        List<EdgeDeviceTwinDto> deviceTwinDtos=new ArrayList<>();
+        for(DeviceTwin twin:deviceTwins){
+            EdgeDeviceTwinDto deviceTwinDto=new EdgeDeviceTwinDto();
+            deviceTwinDto.setPropertyName(twin.getPropertyName());
+            if (twin.getDesired()!=null && twin.getDesired().getMetadata() != null) {
+                deviceTwinDto.setRequireType(twin.getDesired().getMetadata().getType());
+            }
+            if (twin.getDesired() != null) {
+                deviceTwinDto.setRequireValue(twin.getDesired().getValue());
+            }
+            if(twin.getReported()!=null){
+                deviceTwinDto.setReportedTime(twin.getReported().getMetadata().getTimestamp());
+                deviceTwinDto.setReportedType(twin.getReported().getMetadata().getType());
+                deviceTwinDto.setReportedValue(twin.getReported().getValue());
+            }
+            deviceTwinDtos.add(deviceTwinDto);
+        }
+        deviceDto.setDeviceTwinDtoList(deviceTwinDtos);
+        deviceDto.setDeviceModelRefName(edgeDevice.getSpec().getDeviceModelRef().getName());
+        deviceDto.setNodeName(edgeDevice.getSpec().getNodeSelector().getNodeSelectorTerms().get(0)
+                .getMatchExpressions().get(0).getValues().get(0));
+        deviceDto.setDeviceName(edgeDevice.getMetadata().getName());
+        deviceDto.setDescription(edgeDevice.getMetadata().getLabels().get("description"));
+        deviceDto.setModel(edgeDevice.getMetadata().getLabels().get("model"));
+        return deviceDto;
     }
 
 }
