@@ -102,33 +102,7 @@ public class DeviceServiceImpl implements DeviceService {
         List<EdgeDeviceDto> deviceDtos=new ArrayList<>();
         for(EdgeDevice edgeDevice:devices){
             log.info("deviceName is {}",edgeDevice.getMetadata().getName());
-            EdgeDeviceDto deviceDto=new EdgeDeviceDto();
-            List<DeviceTwin> deviceTwins=edgeDevice.getStatus().getTwins();
-            List<EdgeDeviceTwinDto> deviceTwinDtos=new ArrayList<>();
-            for(DeviceTwin twin:deviceTwins){
-                EdgeDeviceTwinDto deviceTwinDto=new EdgeDeviceTwinDto();
-                deviceTwinDto.setPropertyName(twin.getPropertyName());
-                if (twin.getDesired()!=null && twin.getDesired().getMetadata() != null) {
-                    deviceTwinDto.setRequireType(twin.getDesired().getMetadata().getType());
-                }
-                if (twin.getDesired() != null) {
-                    deviceTwinDto.setRequireValue(twin.getDesired().getValue());
-                }
-                if(twin.getReported()!=null){
-                    deviceTwinDto.setReportedTime(twin.getReported().getMetadata().getTimestamp());
-                    deviceTwinDto.setReportedType(twin.getReported().getMetadata().getType());
-                    deviceTwinDto.setReportedValue(twin.getReported().getValue());
-                }
-                deviceTwinDtos.add(deviceTwinDto);
-            }
-            deviceDto.setDeviceTwinDtoList(deviceTwinDtos);
-            deviceDto.setDeviceModelRefName(edgeDevice.getSpec().getDeviceModelRef().getName());
-            deviceDto.setNodeName(edgeDevice.getSpec().getNodeSelector().getNodeSelectorTerms().get(0)
-                    .getMatchExpressions().get(0).getValues().get(0));
-            deviceDto.setDeviceName(edgeDevice.getMetadata().getName());
-            deviceDto.setDescription(edgeDevice.getMetadata().getLabels().get("description"));
-            deviceDto.setModel(edgeDevice.getMetadata().getLabels().get("model"));
-            deviceDtos.add(deviceDto);
+            deviceDtos.add(formatEdgeDeviceDto(edgeDevice));
         }
         return deviceDtos;
     }
@@ -137,6 +111,10 @@ public class DeviceServiceImpl implements DeviceService {
     public EdgeDeviceDto getDevice(String deviceName) {
         EdgeDevice edgeDevice = deviceClient.withName(deviceName).get();
         log.info("edgeDevice is {}", edgeDevice);
+        return formatEdgeDeviceDto(edgeDevice);
+    }
+
+    private EdgeDeviceDto formatEdgeDeviceDto (EdgeDevice edgeDevice) {
         EdgeDeviceDto deviceDto = new EdgeDeviceDto();
         List<DeviceTwin> deviceTwins=edgeDevice.getStatus().getTwins();
         List<EdgeDeviceTwinDto> deviceTwinDtos=new ArrayList<>();
@@ -165,5 +143,4 @@ public class DeviceServiceImpl implements DeviceService {
         deviceDto.setModel(edgeDevice.getMetadata().getLabels().get("model"));
         return deviceDto;
     }
-
 }
