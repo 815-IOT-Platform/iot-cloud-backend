@@ -50,6 +50,10 @@ public class DeviceController extends BaseController {
         deviceService.bindEdgeDevice(bindEdgeDeviceDto, getLoginAuthDto());
     }
 
-
+    @GetMapping("getEdgeDeviceFromBind/{deviceId}")
+    @ApiOperation("从绑定设备中获取边缘设备信息")
+    public EdgeDeviceDto getEdgeDeviceFromBind(@PathVariable Long deviceId) {
+        return deviceService.getEdgeDeviceFromBind(deviceId);
+    }
 
 }
