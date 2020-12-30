@@ -15,6 +15,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <result property="deviceName"    column="device_name"    />
+        <result property="edgeDeviceName"    column="edge_device_name"    />
         <result property="deviceCrd"    column="device_crd"    />
     </resultMap>
 

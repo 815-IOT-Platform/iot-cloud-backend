@@ -3,6 +3,7 @@ package com.iot.device.controller;
 
 
 import com.iot.common.core.controller.BaseController;
+import com.iot.device.dto.BindEdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.model.crd.device.EdgeDevice;
 import com.iot.device.service.DeviceService;
@@ -43,10 +44,12 @@ public class DeviceController extends BaseController {
         return deviceService.getDevice(deviceName);
     }
 
-    @PostMapping("bindEdgeDevice/{deviceName}")
+    @PostMapping("bindEdgeDevice/")
     @ApiOperation("绑定设备影子")
-    public void bindEdgeDevice(@PathVariable String deviceName) {
-        deviceService.bindEdgeDevice(deviceName, getLoginAuthDto());
+    public void bindEdgeDevice(@RequestBody BindEdgeDeviceDto bindEdgeDeviceDto) {
+        deviceService.bindEdgeDevice(bindEdgeDeviceDto, getLoginAuthDto());
     }
+
+
 
 }

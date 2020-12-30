@@ -33,6 +33,10 @@ public class Device extends BaseEntity {
     @Excel(name = "设备名称")
     private String deviceName;
 
+    /** 边缘设备名称*/
+    @Excel(name = "边缘设备名称")
+    private String edgeDeviceName;
+
     /** 设备介绍*/
     @Excel(name = "设备crd")
     private String deviceCrd;
@@ -91,6 +95,14 @@ public class Device extends BaseEntity {
         this.deviceCrd = deviceCrd;
     }
 
+    public String getEdgeDeviceName() {
+        return edgeDeviceName;
+    }
+
+    public void setEdgeDeviceName(String edgeDeviceName) {
+        this.edgeDeviceName = edgeDeviceName;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -105,6 +117,7 @@ public class Device extends BaseEntity {
                 .append("remark", getRemark())
                 .append("deviceName",getDeviceName())
                 .append("deviceCrd", getDeviceCrd())
+                .append("edgeDeviceName", getEdgeDeviceName())
                 .toString();
     }
 }
