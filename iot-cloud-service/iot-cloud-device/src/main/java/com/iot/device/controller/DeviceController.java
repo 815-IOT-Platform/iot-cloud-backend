@@ -2,6 +2,7 @@ package com.iot.device.controller;
 
 
 
+import com.iot.common.core.controller.BaseController;
 import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.model.crd.device.EdgeDevice;
 import com.iot.device.service.DeviceService;
@@ -20,7 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("device")
 @Api(value = "iot-cloud-device",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class DeviceController {
+public class DeviceController extends BaseController {
     @Autowired
     private DeviceService deviceService;
 
@@ -40,6 +41,12 @@ public class DeviceController {
     @ApiOperation("获取指定设备")
     public EdgeDeviceDto getDevice(@PathVariable String deviceName) {
         return deviceService.getDevice(deviceName);
+    }
+
+    @PostMapping("bindEdgeDevice/{deviceName}")
+    @ApiOperation("绑定设备影子")
+    public void bindEdgeDevice(@PathVariable String deviceName) {
+        deviceService.bindEdgeDevice(deviceName, getLoginAuthDto());
     }
 
 }

@@ -34,12 +34,9 @@ public class Device extends BaseEntity {
     private String deviceName;
 
     /** 设备介绍*/
-    @Excel(name = "设备介绍")
-    private String description;
+    @Excel(name = "设备crd")
+    private String deviceCrd;
 
-    /** 所在节点ID*/
-    @Excel(name = "所在节点ID")
-    private Long nodeId;
 
     public void setId(Long id)
     {
@@ -86,20 +83,12 @@ public class Device extends BaseEntity {
         this.deviceName = deviceName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDeviceCrd() {
+        return deviceCrd;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getNodeId() {
-        return nodeId;
-    }
-
-    public void setNodeId(Long nodeId) {
-        this.nodeId = nodeId;
+    public void setDeviceCrd(String deviceCrd) {
+        this.deviceCrd = deviceCrd;
     }
 
     @Override
@@ -115,8 +104,7 @@ public class Device extends BaseEntity {
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
                 .append("deviceName",getDeviceName())
-                .append("nodeId",getNodeId())
-                .append("description",getDescription())
+                .append("deviceCrd", getDeviceCrd())
                 .toString();
     }
 }
