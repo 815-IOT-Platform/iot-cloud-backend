@@ -56,4 +56,9 @@ public class DeviceController extends BaseController {
         return deviceService.getEdgeDeviceFromBind(deviceId);
     }
 
+    @PostMapping("reCreateEdgeDevice/{deviceId}")
+    @ApiOperation("根据绑定设备重建边缘设备crd")
+    public void reCreateEdgeDevice(@PathVariable Long deviceId) {
+        deviceService.reCreateEdgeDeviceFromBind(deviceId);
+    }
 }
