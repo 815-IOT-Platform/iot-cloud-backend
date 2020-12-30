@@ -3,6 +3,7 @@ package com.iot.device.service;
 
 
 import com.iot.common.core.dto.LoginAuthDto;
+import com.iot.device.dto.BindEdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceDto;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface DeviceService {
 
     public EdgeDeviceDto getDevice(String deviceName);
 
-    public void bindEdgeDevice(String deviceName, LoginAuthDto loginAuthDto);
+    public void bindEdgeDevice(BindEdgeDeviceDto bindEdgeDeviceDto, LoginAuthDto loginAuthDto);
 }

@@ -4,6 +4,7 @@ package com.iot.device.service.impl;
 import com.iot.common.core.dto.LoginAuthDto;
 import com.iot.common.exception.BusinessException;
 import com.iot.common.utils.bean.UpdateInfoUtil;
+import com.iot.device.dto.BindEdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceTwinDto;
 import com.iot.device.mapper.DeviceMapper;
@@ -78,11 +79,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void bindEdgeDevice(String deviceName, LoginAuthDto loginAuthDto) {
-        EdgeDevice edgeDevice = deviceClient.withName(deviceName).get();
+    public void bindEdgeDevice(BindEdgeDeviceDto bindEdgeDeviceDto, LoginAuthDto loginAuthDto) {
+        EdgeDevice edgeDevice = deviceClient.withName(bindEdgeDeviceDto.getEdgeDeviceName()).get();
         log.info("edgeDevice is {}", edgeDevice);
         EdgeDeviceDto edgeDeviceDto = formatEdgeDeviceDto(edgeDevice);
         Device realDevice = formatRealDevice(edgeDeviceDto);
+        realDevice.setDeviceName(bindEdgeDeviceDto.getDeviceName());
         log.info("loginAuthDto is {}", loginAuthDto);
         UpdateInfoUtil.setInsertInfo(realDevice, loginAuthDto);
         try {
@@ -95,7 +97,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     private Device formatRealDevice (EdgeDeviceDto edgeDeviceDto) {
         Device realDevice = new Device();
-        realDevice.setDeviceName(edgeDeviceDto.getDeviceName());
+        realDevice.setEdgeDeviceName(edgeDeviceDto.getDeviceName());
         try {
             String deviceCrd = JacksonUtil.toJson(edgeDeviceDto);
             realDevice.setDeviceCrd(deviceCrd);
