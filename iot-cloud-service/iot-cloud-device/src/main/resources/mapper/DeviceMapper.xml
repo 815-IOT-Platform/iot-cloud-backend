@@ -15,8 +15,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <result property="deviceName"    column="device_name"    />
-        <result property="description"    column="description"    />
-        <result property="nodeId"    column="node_id"    />
+        <result property="deviceCrd"    column="device_crd"    />
     </resultMap>
 
 <!--    <insert id="insertDevice" parameterType="Device" useGeneratedKeys="true" keyProperty="id">-->

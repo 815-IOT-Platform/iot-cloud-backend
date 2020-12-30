@@ -1,10 +1,16 @@
 package com.iot.device.service.impl;
 
 
+import com.iot.common.core.dto.LoginAuthDto;
+import com.iot.common.exception.BusinessException;
+import com.iot.common.utils.bean.UpdateInfoUtil;
 import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceTwinDto;
+import com.iot.device.mapper.DeviceMapper;
 import com.iot.device.model.crd.device.*;
+import com.iot.device.model.domain.Device;
 import com.iot.device.service.DeviceService;
+import com.iot.device.util.JacksonUtil;
 import io.fabric8.kubernetes.api.model.NodeSelector;
 import io.fabric8.kubernetes.api.model.NodeSelectorRequirement;
 import io.fabric8.kubernetes.api.model.NodeSelectorTerm;
@@ -36,58 +42,15 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private KubernetesClient k8sClient;
 
+    @Autowired
+    private DeviceMapper deviceMapper;
+
 
 
     @Override
     public void createDevice(EdgeDeviceDto deviceDto) {
         try {
-            EdgeDevice device = new EdgeDevice();
-            DeviceSpec deviceSpec = new DeviceSpec();
-            DeviceModelRef deviceModelRef = new DeviceModelRef();
-            deviceModelRef.setName(deviceDto.getDeviceModelRefName());
-            deviceSpec.setDeviceModelRef(deviceModelRef);
-            NodeSelector nodeSelector = new NodeSelector();
-            List<NodeSelectorTerm> nodeSelectorTerms = new ArrayList<>();
-            NodeSelectorTerm nodeSelectorTerm = new NodeSelectorTerm();
-            List<NodeSelectorRequirement> nodeSelectorRequirements = new ArrayList<>();
-            NodeSelectorRequirement nodeSelectorRequirement = new NodeSelectorRequirement();
-            nodeSelectorRequirement.setOperator("In");
-            List<String> nodes = new ArrayList<>();
-            nodes.add(deviceDto.getNodeName());
-            nodeSelectorRequirement.setValues(nodes);
-            nodeSelectorRequirements.add(0,nodeSelectorRequirement);
-            nodeSelectorTerm.setMatchExpressions(nodeSelectorRequirements);
-            nodeSelectorTerms.add(0,nodeSelectorTerm);
-            nodeSelector.setNodeSelectorTerms(nodeSelectorTerms);
-            deviceSpec.setNodeSelector(nodeSelector);
-            device.setSpec(deviceSpec);
-
-            DeviceStatus deviceStatus = new DeviceStatus();
-            List<DeviceTwin> deviceTwins = new ArrayList<>();
-            deviceDto.getDeviceTwinDtoList().forEach(edgeDeviceTwin -> {
-                DeviceTwin deviceTwin = new DeviceTwin();
-                deviceTwin.setPropertyName(edgeDeviceTwin.getPropertyName());
-                DeviceDesired deviceDesired = new DeviceDesired();
-                DeviceDesiredMetadata desiredMetadata = new DeviceDesiredMetadata();
-                desiredMetadata.setType(edgeDeviceTwin.getRequireType());
-                deviceDesired.setMetadata(desiredMetadata);
-                deviceDesired.setValue(edgeDeviceTwin.getRequireValue());
-                deviceTwin.setDesired(deviceDesired);
-                deviceTwins.add(deviceTwin);
-            });
-            deviceStatus.setTwins(deviceTwins);
-            device.setStatus(deviceStatus);
-            device.setApiVersion("devices.kubeedge.io/v1alpha1");
-            device.setKind("Device");
-            ObjectMeta objectMeta = new ObjectMeta();
-            objectMeta.setName(deviceDto.getDeviceName());
-            Map<String,String> map = new HashMap<>();
-            map.put("description",deviceDto.getDescription());
-            map.put("model",deviceDto.getModel());
-            objectMeta.setLabels(map);
-            objectMeta.setNamespace("default");
-            device.setMetadata(objectMeta);
-            deviceClient.createOrReplace(device);
+            deviceClient.createOrReplace(formatEdgeDevice(deviceDto));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -112,6 +75,34 @@ public class DeviceServiceImpl implements DeviceService {
         EdgeDevice edgeDevice = deviceClient.withName(deviceName).get();
         log.info("edgeDevice is {}", edgeDevice);
         return formatEdgeDeviceDto(edgeDevice);
+    }
+
+    @Override
+    public void bindEdgeDevice(String deviceName, LoginAuthDto loginAuthDto) {
+        EdgeDevice edgeDevice = deviceClient.withName(deviceName).get();
+        log.info("edgeDevice is {}", edgeDevice);
+        EdgeDeviceDto edgeDeviceDto = formatEdgeDeviceDto(edgeDevice);
+        Device realDevice = formatRealDevice(edgeDeviceDto);
+        log.info("loginAuthDto is {}", loginAuthDto);
+        UpdateInfoUtil.setInsertInfo(realDevice, loginAuthDto);
+        try {
+            deviceMapper.insert(realDevice);
+        } catch (Exception e) {
+            log.info("error is {}",e.getMessage());
+            throw new BusinessException("db error");
+        }
+    }
+
+    private Device formatRealDevice (EdgeDeviceDto edgeDeviceDto) {
+        Device realDevice = new Device();
+        realDevice.setDeviceName(edgeDeviceDto.getDeviceName());
+        try {
+            String deviceCrd = JacksonUtil.toJson(edgeDeviceDto);
+            realDevice.setDeviceCrd(deviceCrd);
+        } catch (Exception e) {
+            throw new BusinessException("json 序列化 error");
+        }
+        return realDevice;
     }
 
     private EdgeDeviceDto formatEdgeDeviceDto (EdgeDevice edgeDevice) {
@@ -142,5 +133,55 @@ public class DeviceServiceImpl implements DeviceService {
         deviceDto.setDescription(edgeDevice.getMetadata().getLabels().get("description"));
         deviceDto.setModel(edgeDevice.getMetadata().getLabels().get("model"));
         return deviceDto;
+    }
+
+    public EdgeDevice formatEdgeDevice(EdgeDeviceDto deviceDto) {
+        EdgeDevice device = new EdgeDevice();
+        DeviceSpec deviceSpec = new DeviceSpec();
+        DeviceModelRef deviceModelRef = new DeviceModelRef();
+        deviceModelRef.setName(deviceDto.getDeviceModelRefName());
+        deviceSpec.setDeviceModelRef(deviceModelRef);
+        NodeSelector nodeSelector = new NodeSelector();
+        List<NodeSelectorTerm> nodeSelectorTerms = new ArrayList<>();
+        NodeSelectorTerm nodeSelectorTerm = new NodeSelectorTerm();
+        List<NodeSelectorRequirement> nodeSelectorRequirements = new ArrayList<>();
+        NodeSelectorRequirement nodeSelectorRequirement = new NodeSelectorRequirement();
+        nodeSelectorRequirement.setOperator("In");
+        List<String> nodes = new ArrayList<>();
+        nodes.add(deviceDto.getNodeName());
+        nodeSelectorRequirement.setValues(nodes);
+        nodeSelectorRequirements.add(0,nodeSelectorRequirement);
+        nodeSelectorTerm.setMatchExpressions(nodeSelectorRequirements);
+        nodeSelectorTerms.add(0,nodeSelectorTerm);
+        nodeSelector.setNodeSelectorTerms(nodeSelectorTerms);
+        deviceSpec.setNodeSelector(nodeSelector);
+        device.setSpec(deviceSpec);
+
+        DeviceStatus deviceStatus = new DeviceStatus();
+        List<DeviceTwin> deviceTwins = new ArrayList<>();
+        deviceDto.getDeviceTwinDtoList().forEach(edgeDeviceTwin -> {
+            DeviceTwin deviceTwin = new DeviceTwin();
+            deviceTwin.setPropertyName(edgeDeviceTwin.getPropertyName());
+            DeviceDesired deviceDesired = new DeviceDesired();
+            DeviceDesiredMetadata desiredMetadata = new DeviceDesiredMetadata();
+            desiredMetadata.setType(edgeDeviceTwin.getRequireType());
+            deviceDesired.setMetadata(desiredMetadata);
+            deviceDesired.setValue(edgeDeviceTwin.getRequireValue());
+            deviceTwin.setDesired(deviceDesired);
+            deviceTwins.add(deviceTwin);
+        });
+        deviceStatus.setTwins(deviceTwins);
+        device.setStatus(deviceStatus);
+        device.setApiVersion("devices.kubeedge.io/v1alpha1");
+        device.setKind("Device");
+        ObjectMeta objectMeta = new ObjectMeta();
+        objectMeta.setName(deviceDto.getDeviceName());
+        Map<String,String> map = new HashMap<>();
+        map.put("description",deviceDto.getDescription());
+        map.put("model",deviceDto.getModel());
+        objectMeta.setLabels(map);
+        objectMeta.setNamespace("default");
+        device.setMetadata(objectMeta);
+        return device;
     }
 }
