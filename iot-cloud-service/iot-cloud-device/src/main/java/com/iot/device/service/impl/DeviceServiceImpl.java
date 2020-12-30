@@ -108,6 +108,31 @@ public class DeviceServiceImpl implements DeviceService {
         return formatEdgeDeviceDto(edgeDevice);
     }
 
+    @Override
+    public void reCreateEdgeDeviceFromBind(Long realDeviceId) {
+        Device realDevice;
+        try {
+            realDevice = deviceMapper.selectByPrimaryKey(realDeviceId);
+        } catch (Exception e) {
+            log.info("error is {}",e.getMessage());
+            throw new BusinessException("db error");
+        }
+        EdgeDeviceDto edgeDeviceDto;
+        try {
+             edgeDeviceDto = JacksonUtil.parseJson(realDevice.getDeviceCrd(), EdgeDeviceDto.class);
+        } catch (Exception e) {
+            log.info("error is {}",e.getMessage());
+            throw new BusinessException("json deserialize error");
+        }
+        try {
+            deviceClient.createOrReplace(formatEdgeDevice(edgeDeviceDto));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("设备创建失败");
+        }
+    }
+
     private Device formatRealDevice (EdgeDeviceDto edgeDeviceDto) {
         Device realDevice = new Device();
         realDevice.setEdgeDeviceName(edgeDeviceDto.getDeviceName());
