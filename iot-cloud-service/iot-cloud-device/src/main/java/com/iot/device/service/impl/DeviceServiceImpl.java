@@ -95,6 +95,19 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
+    @Override
+    public EdgeDeviceDto getEdgeDeviceFromBind(Long realDeviceId) {
+        Device realDevice;
+        try {
+             realDevice = deviceMapper.selectByPrimaryKey(realDeviceId);
+        } catch (Exception e) {
+            log.info("error is {}",e.getMessage());
+            throw new BusinessException("db error");
+        }
+        EdgeDevice edgeDevice = deviceClient.withName(realDevice.getEdgeDeviceName()).get();
+        return formatEdgeDeviceDto(edgeDevice);
+    }
+
     private Device formatRealDevice (EdgeDeviceDto edgeDeviceDto) {
         Device realDevice = new Device();
         realDevice.setEdgeDeviceName(edgeDeviceDto.getDeviceName());

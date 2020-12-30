@@ -19,4 +19,6 @@ public interface DeviceService {
     public EdgeDeviceDto getDevice(String deviceName);
 
     public void bindEdgeDevice(BindEdgeDeviceDto bindEdgeDeviceDto, LoginAuthDto loginAuthDto);
+
+    public EdgeDeviceDto getEdgeDeviceFromBind(Long realDeviceId);
 }
