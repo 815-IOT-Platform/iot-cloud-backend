@@ -1,15 +1,20 @@
 package com.iot.device.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.iot.common.core.dto.LoginAuthDto;
 import com.iot.common.exception.BusinessException;
+import com.iot.common.json.JSONObject;
 import com.iot.common.utils.bean.UpdateInfoUtil;
 import com.iot.device.dto.BindEdgeDeviceDto;
+import com.iot.device.dto.DeviceManageDto;
 import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceTwinDto;
+import com.iot.device.mapper.DeviceManageMapper;
 import com.iot.device.mapper.DeviceMapper;
 import com.iot.device.model.crd.device.*;
 import com.iot.device.model.domain.Device;
+import com.iot.device.model.domain.DeviceManage;
 import com.iot.device.service.DeviceService;
 import com.iot.device.util.JacksonUtil;
 import io.fabric8.kubernetes.api.model.NodeSelector;
@@ -23,6 +28,7 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.iot.device.controller.DeviceManageController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,12 +52,31 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private DeviceMapper deviceMapper;
 
+    @Autowired
+    private DeviceManageMapper deviceManageMapper;
+
 
 
     @Override
     public void createDevice(EdgeDeviceDto deviceDto) {
         try {
-            deviceClient.createOrReplace(formatEdgeDevice(deviceDto));
+            EdgeDevice device = formatEdgeDevice(deviceDto);
+            deviceClient.createOrReplace(device);
+            // 将重建设备数据持久化到数据库
+            DeviceManage deviceManage = new DeviceManage();
+            deviceManage.setVersion(0L);
+            deviceManage.setDeviceId(0L);
+            deviceManage.setState("1");
+            deviceManage.setDescription("***");
+            deviceManage.setDeviceModelName(device.getSpec().getDeviceModelRef().getName());
+            deviceManage.setDeviceName(device.getMetadata().getName());
+            deviceManage.setEdgeDeviceName(device.getMetadata().getName());
+            deviceManage.setNodeName(device.getSpec().getNodeSelector().getNodeSelectorTerms().get(0)
+                    .getMatchExpressions().get(0).getValues().get(0));
+            String twins = JSON.toJSONString(device.getStatus().getTwins());
+            deviceManage.setDeviceTwins(twins);
+            System.out.println("*****" + twins + "*****");
+            deviceManageMapper.saveDevice(deviceManage);
         }
         catch (Exception e){
             e.printStackTrace();
