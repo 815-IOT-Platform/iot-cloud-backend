@@ -86,6 +86,9 @@ iot-cloud:
   kubernetes:
     master: iot-cloud-k8s:8080
 
+  etcd:
+    endpoints: http://iot-cloud-etcd:3379
+
 rocketmq:
   consumer:
     isOnOff: on

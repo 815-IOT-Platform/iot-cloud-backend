@@ -34,7 +34,7 @@ public class DeviceModelServiceImpl implements DeviceModelService {
             ObjectMeta objectMeta=new ObjectMeta();
             objectMeta.setName(deviceModelDto.getName());
             objectMeta.setNamespace("default");
-            deviceModel.setApiVersion("devices.kubeedge.io/v1alpha1");
+            deviceModel.setApiVersion("devices.kubeedge.io/v1alpha2");
             deviceModel.setMetadata(objectMeta);
             deviceModel.setKind("DeviceModel");
             DeviceModelSpec modelSpec=new DeviceModelSpec();

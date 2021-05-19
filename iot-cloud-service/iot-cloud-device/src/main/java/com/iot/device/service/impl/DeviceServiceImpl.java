@@ -212,7 +212,7 @@ public class DeviceServiceImpl implements DeviceService {
         });
         deviceStatus.setTwins(deviceTwins);
         device.setStatus(deviceStatus);
-        device.setApiVersion("devices.kubeedge.io/v1alpha1");
+        device.setApiVersion("devices.kubeedge.io/v1alpha2");
         device.setKind("Device");
         ObjectMeta objectMeta = new ObjectMeta();
         objectMeta.setName(deviceDto.getDeviceName());
