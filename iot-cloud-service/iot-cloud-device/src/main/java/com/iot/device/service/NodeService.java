@@ -1,12 +1,8 @@
 package com.iot.device.service;
 
-import com.iot.device.model.domain.Node;
-
 import java.util.List;
 
 public interface NodeService {
 
-    public void createEdgeNode(Node node);
-
-    public List<Node> getAllEdgeNode();
+    public List<io.fabric8.kubernetes.api.model.Node> getAllNodes();
 }

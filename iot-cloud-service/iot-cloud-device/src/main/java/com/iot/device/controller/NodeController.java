@@ -2,7 +2,6 @@ package com.iot.device.controller;
 
 
 import com.iot.common.core.controller.BaseController;
-import com.iot.device.model.domain.Node;
 import com.iot.device.service.NodeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,15 +19,9 @@ public class NodeController extends BaseController {
     @Autowired
     private NodeService nodeService;
 
-    @PostMapping("addEdgeNode")
-    @ApiOperation("创建边缘节点")
-    public void addEdgeNode(@RequestBody Node node) {
-        nodeService.createEdgeNode(node);
-    }
-
-    @GetMapping("getAllEdgeNode")
+    @GetMapping("getAllNodes")
     @ApiOperation( "获取全部边缘节点")
-    public List<Node> getAllDevice() {
-        return nodeService.getAllEdgeNode();
+    public List<io.fabric8.kubernetes.api.model.Node> getAllDevice() {
+        return nodeService.getAllNodes();
     }
 }
