@@ -219,6 +219,7 @@ public class DeviceServiceImpl implements DeviceService {
         Map<String,String> map = new HashMap<>();
         map.put("description",deviceDto.getDescription());
         map.put("model",deviceDto.getModel());
+        map.put("node", deviceDto.getNodeName());
         objectMeta.setLabels(map);
         objectMeta.setNamespace("default");
         device.setMetadata(objectMeta);
