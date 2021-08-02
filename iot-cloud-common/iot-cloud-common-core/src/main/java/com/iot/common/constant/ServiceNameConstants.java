@@ -24,4 +24,9 @@ public interface ServiceNameConstants
      * imc模块
      */
     String IMC_SERVICE = "iot-cloud-imc";
+
+    /**
+     * device模块
+     */
+    String DEVICE_SERVICE = "iot-cloud-device";
 }

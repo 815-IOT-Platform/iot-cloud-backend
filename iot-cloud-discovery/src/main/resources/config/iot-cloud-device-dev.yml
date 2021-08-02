@@ -85,3 +85,28 @@ iot-cloud:
 
   kubernetes:
     master: iot-cloud-k8s:8080
+
+  etcd:
+    endpoints: http://iot-cloud-etcd:3379
+
+rocketmq:
+  consumer:
+    isOnOff: on
+    groupName: iot-cloud-device-consumer
+    namesrvAddr: iot-cloud-mq-rocket:9876
+    topics: device-data,*
+    consumeThreadMin: 5
+    consumeThreadMax: 32
+    consumeMessageBatchMaxSize: 1
+dict:
+  deviceDict:
+    power: "电量"
+    heartBeats: "心率"
+    walkCounts: "步长"
+    miles: "里程"
+    calories: "卡路里"
+    speed: "步速"
+    deviceHigh: "设备标识高字节"
+    bluetoothVersion: "蓝牙软件版本号"
+    deviceVersion: "设备软件版本号"
+    deviceLow: "设备标识低字节"
