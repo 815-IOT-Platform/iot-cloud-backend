@@ -91,6 +91,12 @@
             <artifactId>iot-cloud-common-core</artifactId>
             <version>1.0</version>
         </dependency>
+        <!-- k8s client-->
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>4.10.2</version>
+        </dependency>
     </dependencies>
 
     <build>

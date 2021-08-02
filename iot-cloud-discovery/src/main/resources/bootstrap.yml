@@ -6,7 +6,7 @@ spring:
     config:
       server:
         native:
-#          search-locations: /home/iot-cloud/iot-cloud-config-repo
+#          search-locations: /home/iot-cloud/config
           search-locations: classpath:/config
 
 # 注册中心配置

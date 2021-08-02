@@ -51,3 +51,7 @@ management:
     web:
       exposure:
         include: '*'
+
+iot-cloud:
+  kubernetes:
+    master: iot-cloud-k8s:8080
