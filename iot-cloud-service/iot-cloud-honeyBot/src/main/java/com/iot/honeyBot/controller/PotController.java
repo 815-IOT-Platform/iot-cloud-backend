@@ -21,4 +21,10 @@ public class PotController {
     public R getAllNodes() {
         return R.data(potService.GetAllEdgeNode());
     }
+
+    @GetMapping("getPotByNodes/{node}")
+    @ApiOperation("获取节点上的全部蜜罐")
+    public R getPotByNodes(@PathVariable String node) {
+        return R.data(potService.GetAllPotByNode(node));
+    }
 }
