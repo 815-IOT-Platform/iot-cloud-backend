@@ -7,6 +7,7 @@ import com.iot.honeyBot.model.constants.ProtocolType;
 import com.iot.honeyBot.model.crd.device.*;
 import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
+import com.iot.honeyBot.util.K8sutil;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.CustomResourceList;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -21,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.iot.honeyBot.model.constants.Constants.PotDeviceModel;
-import static com.iot.honeyBot.model.constants.Constants.PotPrefix;
+import static com.iot.honeyBot.config.K8sDeviceConfig.DeviceCRDContext;
+import static com.iot.honeyBot.model.constants.Constants.*;
 
 @Slf4j
 @Service
@@ -53,26 +54,48 @@ public class PotServiceImpl implements PotService {
         return pots;
     }
 
+    @Override
+    public void CreatePot(Honeypot honeypot) {
+        Map<String,Object> potMap = new HashMap<>();
+        potMap.putAll(K8sutil.PotTemplate);
+        updatePodCR(honeypot.getProtocol().getProtocol(), honeypot.getPort(), honeypot.getNode(), honeypot.getStatus(), potMap);
+        try {
+            k8sClient.customResource(DeviceCRDContext).create("default",potMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void UpdatePot(Honeypot honeypot) {
+        Map<String,Object> potMap = k8sClient.customResource(DeviceCRDContext).get("default",honeypot.getName());
+        updatePodCR(null, honeypot.getPort(), null, honeypot.getStatus(), potMap);
+        try {
+            k8sClient.customResource(DeviceCRDContext).createOrReplace("default",potMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private Honeypot formatToHoneypot (EdgeDevice edgeDevice) {
+        log.info("edgeDevice is {}", edgeDevice);
         Honeypot honeypot = new Honeypot();
         List<DeviceTwin> deviceTwins=edgeDevice.getStatus().getTwins();
         for(DeviceTwin twin:deviceTwins){
-            if(twin.getReported()!=null){
-                String type = twin.getPropertyName();
-                String value = twin.getReported().getValue();
-                switch (type) {
-                    case "switch" :
-                        honeypot.setStatus(value);
-                        break;
-                    case "protocol" :
-                        honeypot.setProtocol(ProtocolType.valueOfName(value));
-                        break;
-                    case "port" :
-                        honeypot.setPort(value);
-                        break;
-                    default:
-                        break;
-                }
+            String type = twin.getPropertyName();
+            String desiredValue = twin.getDesired().getValue();
+            switch (type) {
+                case "switch" :
+                    honeypot.setStatus(twin.getReported() == null ? "OFF" :  twin.getReported().getValue());
+                    break;
+                case "protocol" :
+                    honeypot.setProtocol(ProtocolType.valueOfName(desiredValue));
+                    break;
+                case "port" :
+                    honeypot.setPort(desiredValue);
+                    break;
+                default:
+                    break;
             }
         }
         honeypot.setName(edgeDevice.getMetadata().getName());
@@ -82,74 +105,79 @@ public class PotServiceImpl implements PotService {
         return honeypot;
     }
 
-    public EdgeDevice formatEdgeDevice(Honeypot honeypot) {
-        EdgeDevice device = new EdgeDevice();
-        DeviceSpec deviceSpec = new DeviceSpec();
-        DeviceModelRef deviceModelRef = new DeviceModelRef();
-        deviceModelRef.setName(PotDeviceModel);
-        deviceSpec.setDeviceModelRef(deviceModelRef);
-        NodeSelector nodeSelector = new NodeSelector();
-        List<NodeSelectorTerm> nodeSelectorTerms = new ArrayList<>();
-        NodeSelectorTerm nodeSelectorTerm = new NodeSelectorTerm();
-        List<NodeSelectorRequirement> nodeSelectorRequirements = new ArrayList<>();
-        NodeSelectorRequirement nodeSelectorRequirement = new NodeSelectorRequirement();
-        nodeSelectorRequirement.setOperator("In");
-        List<String> nodes = new ArrayList<>();
-        nodes.add(honeypot.getNode());
-        nodeSelectorRequirement.setValues(nodes);
-        nodeSelectorRequirements.add(0,nodeSelectorRequirement);
-        nodeSelectorTerm.setMatchExpressions(nodeSelectorRequirements);
-        nodeSelectorTerms.add(0,nodeSelectorTerm);
-        nodeSelector.setNodeSelectorTerms(nodeSelectorTerms);
-        deviceSpec.setNodeSelector(nodeSelector);
-        device.setSpec(deviceSpec);
-
-        DeviceStatus deviceStatus = new DeviceStatus();
-        List<DeviceTwin> deviceTwins = new ArrayList<>();
-        // set switch
-        DeviceTwin switchTwin = new DeviceTwin();
-        switchTwin.setPropertyName(Constants.Status);
-        DeviceDesired switchDesired = new DeviceDesired();
-        DeviceDesiredMetadata switchMetadata = new DeviceDesiredMetadata();
-        switchMetadata.setType("string");
-        switchDesired.setMetadata(switchMetadata);
-        switchDesired.setValue(honeypot.getStatus());
-        switchTwin.setDesired(switchDesired);
-        deviceTwins.add(switchTwin);
-
-        // set protocol
-        DeviceTwin protocolTwin = new DeviceTwin();
-        switchTwin.setPropertyName(Constants.Protocol);
-        DeviceDesired protocolDesired = new DeviceDesired();
-        DeviceDesiredMetadata protocolMetadata = new DeviceDesiredMetadata();
-        protocolMetadata.setType("string");
-        protocolDesired.setMetadata(protocolMetadata);
-        protocolDesired.setValue(honeypot.getProtocol().getProtocol());
-        protocolTwin.setDesired(protocolDesired);
-        deviceTwins.add(protocolTwin);
-
-        // set port
-        DeviceTwin portTwin = new DeviceTwin();
-        switchTwin.setPropertyName(Constants.Port);
-        DeviceDesired portDesired = new DeviceDesired();
-        DeviceDesiredMetadata portMetadata = new DeviceDesiredMetadata();
-        portMetadata.setType("string");
-        portDesired.setMetadata(portMetadata);
-        portDesired.setValue(honeypot.getPort());
-        portTwin.setDesired(portDesired);
-        deviceTwins.add(portTwin);
-
-        deviceStatus.setTwins(deviceTwins);
-        device.setStatus(deviceStatus);
-        device.setApiVersion("devices.kubeedge.io/v1alpha2");
-        device.setKind("Device");
-        ObjectMeta objectMeta = new ObjectMeta();
-        objectMeta.setGenerateName(PotPrefix + honeypot.getProtocol());
-        Map<String,String> map = new HashMap<>();
-        map.put("description",honeypot.getDescription());
-        objectMeta.setLabels(map);
-        objectMeta.setNamespace("default");
-        device.setMetadata(objectMeta);
-        return device;
+    private void updatePodCR(String protocol, String port, String node, String potStatus, Map<String,Object> potMap) {
+        Object metadata = potMap.get("metadata");
+        if (metadata instanceof Map) {
+            if (protocol != null && ! protocol.equals("")) {
+                ((Map) metadata).put("generateName", PotPrefix + Stash + protocol + Stash);
+                potMap.put("metadata", metadata);
+            }
+        }
+        if (node != null && !node.equals("")) {
+            Object spec = potMap.get("spec");
+            if (spec instanceof Map) {
+                Object nodeSelector = ((Map) spec).get("nodeSelector");
+                if (nodeSelector instanceof Map) {
+                    Object nodeSelectorTerms = ((Map) nodeSelector).get("nodeSelectorTerms");
+                    if (nodeSelectorTerms instanceof List) {
+                        Object term0 = ((List) nodeSelectorTerms).get(0);
+                        if (term0 instanceof Map) {
+                            Object matchExpressions = ((Map) term0).get("matchExpressions");
+                            if (matchExpressions instanceof List) {
+                                Object match0 = ((List) matchExpressions).get(0);
+                                if (match0 instanceof Map) {
+                                    List<String> list = new ArrayList<>();
+                                    list.add(node);
+                                    ((Map) match0).put("values", list);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Object status = potMap.get("status");
+        if (status instanceof Map) {
+            Object twins = ((Map) status).get("twins");
+            if (twins instanceof List) {
+                for (Object twin : (List)twins) {
+                    if (twin instanceof Map) {
+                        String property = ((Map) twin).get("propertyName").toString();
+                        Object desired;
+                        switch (property) {
+                            case "protocol":
+                                desired = ((Map) twin).get("desired");
+                                if (desired instanceof Map) {
+                                    if (protocol != null && !protocol.equals("")) {
+                                        ((Map) desired).put("value", protocol);
+                                    }
+                                }
+                                ((Map) twin).put("desired", desired);
+                                break;
+                            case "port":
+                                desired = ((Map) twin).get("desired");
+                                if (desired instanceof Map) {
+                                    if (port != null && !port.equals("")) {
+                                        ((Map) desired).put("value", port);
+                                    }
+                                }
+                                ((Map) twin).put("desired", desired);
+                                break;
+                            case "switch":
+                                desired = ((Map) twin).get("desired");
+                                if (desired instanceof Map) {
+                                    if (potStatus != null && !potStatus.equals("")) {
+                                        ((Map) desired).put("value", potStatus);
+                                    }
+                                }
+                                ((Map) twin).put("desired", desired);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

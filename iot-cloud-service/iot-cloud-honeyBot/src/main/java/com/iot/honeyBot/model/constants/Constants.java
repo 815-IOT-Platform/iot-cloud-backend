@@ -9,5 +9,7 @@ public class Constants {
 
     static public String Port = "port";
 
-    static public  String PotPrefix = "pot";
+    static public String PotPrefix = "pot";
+
+    static public String Stash = "-";
 }

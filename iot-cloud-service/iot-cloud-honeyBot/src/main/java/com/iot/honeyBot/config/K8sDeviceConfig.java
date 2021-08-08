@@ -19,6 +19,7 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.kubernetes.client.dsl.base.CustomResourceDefinitionContext;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +39,15 @@ public class K8sDeviceConfig {
     public static String DEVICE_CRD_GROUP = "devices.kubeedge.io";
     public static String DEVICE_CRD_NAME = "devices." +  DEVICE_CRD_GROUP;
     public static String DEVICE_MODEL_CRD_NAME = "devicemodels." + DEVICE_CRD_GROUP;
+
+    public static final CustomResourceDefinitionContext DeviceCRDContext = new CustomResourceDefinitionContext.Builder()
+            .withGroup("devices.kubeedge.io")
+            .withKind("device")
+            .withName("devices.devices.kubeedge.io")
+            .withPlural("devices")
+            .withScope("Namespaced")
+            .withVersion("v1alpha2")
+            .build();
 
     @Bean
     public NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient()

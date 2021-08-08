@@ -11,4 +11,8 @@ public interface PotService {
     NodeList GetAllEdgeNode();
 
     List<Honeypot> GetAllPotByNode(String node);
+
+    void CreatePot(Honeypot honeypot);
+
+    void UpdatePot(Honeypot honeypot);
 }

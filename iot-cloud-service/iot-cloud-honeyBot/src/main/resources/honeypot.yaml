@@ -1,0 +1,33 @@
+apiVersion: devices.kubeedge.io/v1alpha2
+kind: Device
+metadata:
+  generateName: pot-xxx
+  labels:
+    description: httpHoneypot
+spec:
+  deviceModelRef:
+    name: honeypot
+  nodeSelector:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: ''
+            operator: In
+            values:
+              - edgenode
+status:
+  twins:
+    - propertyName: switch
+      desired:
+        metadata:
+          type: string
+        value: 'OFF'
+    - propertyName: protocol
+      desired:
+        metadata:
+          type: string
+        value: 'protocol'
+    - propertyName: port
+      desired:
+        metadata:
+          type: string
+        value: 'port'
