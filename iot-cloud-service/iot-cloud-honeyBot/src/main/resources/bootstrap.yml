@@ -55,3 +55,6 @@ management:
 iot-cloud:
   kubernetes:
     master: iot-cloud-k8s:8080
+
+mybatis:
+  mapper-locations: classpath:mapper/*xml

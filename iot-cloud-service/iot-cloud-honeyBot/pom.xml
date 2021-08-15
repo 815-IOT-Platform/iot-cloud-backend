@@ -62,11 +62,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-        </dependency>
-        <!-- Mysql驱动包 -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <version>1.1.17</version>
         </dependency>
 
         <dependency>
@@ -106,6 +102,14 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taosdata.jdbc</groupId>
+            <artifactId>taos-jdbcdriver</artifactId>
+            <version>2.0.28</version>
+            <!--            <scope>system</scope>-->
+            <!--            <systemPath>${project.basedir}/src/main/resources/taos-jdbcdriver-2.0.28-dist.jar</systemPath>-->
         </dependency>
     </dependencies>
 
