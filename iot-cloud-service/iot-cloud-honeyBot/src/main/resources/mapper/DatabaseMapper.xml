@@ -4,7 +4,7 @@
 <mapper namespace="com.iot.honeyBot.mapper.DatabaseMapper">
 
     <update id="createDatabase" parameterType="java.lang.String">
-        create database if not exists ${dbname}
+        create database if not exists #{dbname}
     </update>
 
     <update id="dropDatabase" parameterType="java.lang.String">

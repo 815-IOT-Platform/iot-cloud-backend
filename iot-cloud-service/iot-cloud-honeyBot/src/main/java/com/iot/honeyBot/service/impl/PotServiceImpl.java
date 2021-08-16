@@ -2,9 +2,14 @@ package com.iot.honeyBot.service.impl;
 
 import com.iot.device.dto.EdgeDeviceDto;
 import com.iot.device.dto.EdgeDeviceTwinDto;
+import com.iot.honeyBot.mapper.DatabaseMapper;
+import com.iot.honeyBot.mapper.TableMapper;
 import com.iot.honeyBot.model.constants.Constants;
 import com.iot.honeyBot.model.constants.ProtocolType;
 import com.iot.honeyBot.model.crd.device.*;
+import com.iot.honeyBot.model.domain.FieldMetadata;
+import com.iot.honeyBot.model.domain.TableMetadata;
+import com.iot.honeyBot.model.dto.CollectPotDto;
 import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
 import com.iot.honeyBot.util.K8sutil;
@@ -33,6 +38,12 @@ public class PotServiceImpl implements PotService {
 
     @Autowired
     NonNamespaceOperation<EdgeDevice, DeviceList, DoneableDevice, Resource<EdgeDevice, DoneableDevice>> deviceClient;
+
+    @javax.annotation.Resource
+    DatabaseMapper databaseMapper;
+
+    @javax.annotation.Resource
+    TableMapper tableMapper;
 
     @Override
     public NodeList GetAllEdgeNode() {
@@ -75,6 +86,23 @@ public class PotServiceImpl implements PotService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void StartCollectNode(String node) {
+        databaseMapper.createDatabase(node);
+    }
+
+    @Override
+    public void StartCollectPot(CollectPotDto collectPotDto) {
+        TableMetadata tableMetadata = new TableMetadata();
+        tableMetadata.setDbname(collectPotDto.getNode());
+        tableMetadata.setTablename(collectPotDto.getProtocol().getProtocol());
+        List<FieldMetadata> fieldMetadata = new ArrayList<>();
+        fieldMetadata.add(new FieldMetadata("ts", "TIMESTAMP"));
+        fieldMetadata.add(new FieldMetadata("value", "NCHAR(255)"));
+        tableMetadata.setFields(fieldMetadata);
+        tableMapper.createSTable(tableMetadata);
     }
 
     private Honeypot formatToHoneypot (EdgeDevice edgeDevice) {

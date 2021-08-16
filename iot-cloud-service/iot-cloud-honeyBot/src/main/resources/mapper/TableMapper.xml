@@ -4,18 +4,18 @@
 <mapper namespace="com.iot.honeyBot.mapper.TableMapper">
 
     <update id="createSTable" parameterType="com.iot.honeyBot.model.domain.TableMetadata">
-        create table if not exists ${dbname}.${tablename}
+        create table if not exists #{dbname}.#{tablename}
         <foreach collection="fields" item="field" index="index" open="(" close=")" separator=",">
-            ${field.name} ${field.type}
+            #{field.name} #{field.type}
         </foreach>
-        TAGS
-        <foreach collection="tags" item="tag" index="index" open="(" close=")" separator=",">
-            ${tag.name} ${tag.type}
-        </foreach>
+<!--        TAGS-->
+<!--        <foreach collection="tags" item="tag" index="index" open="(" close=")" separator=",">-->
+<!--            #{tag.name} #{tag.type}-->
+<!--        </foreach>-->
     </update>
 
     <update id="dropTable" parameterType="java.lang.String">
-        drop ${tablename}
+        drop #{tablename}
     </update>
 
 </mapper>

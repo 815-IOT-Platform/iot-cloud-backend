@@ -2,6 +2,7 @@ package com.iot.honeyBot.controller;
 
 
 import com.iot.common.core.domain.R;
+import com.iot.honeyBot.model.dto.CollectPotDto;
 import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
 import io.swagger.annotations.Api;
@@ -40,6 +41,20 @@ public class PotController {
     @ApiOperation("更新蜜罐")
     public R updatePot(@RequestBody Honeypot honeypot) {
         potService.UpdatePot(honeypot);
+        return R.ok();
+    }
+
+    @PostMapping("collectNode/{node}")
+    @ApiOperation("采集节点上的蜜罐数据")
+    public R collectNode(@PathVariable String node) {
+        potService.StartCollectNode(node);
+        return R.ok();
+    }
+
+    @PostMapping("collectPot")
+    @ApiOperation("采集节点上指定蜜罐的数据")
+    public R collectPot(@RequestBody CollectPotDto collectPotDto) {
+        potService.StartCollectPot(collectPotDto);
         return R.ok();
     }
 }

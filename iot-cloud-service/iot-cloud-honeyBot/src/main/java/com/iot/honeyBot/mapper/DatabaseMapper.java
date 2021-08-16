@@ -1,5 +1,7 @@
 package com.iot.honeyBot.mapper;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.Map;
 
 public interface DatabaseMapper {
@@ -10,6 +12,6 @@ public interface DatabaseMapper {
 
     int creatDatabaseWithParameters(Map<String,String> map);
 
-    int useDatabase(String dbname);
+    int useDatabase(@Param("dbname") String dbname);
 
 }
