@@ -7,6 +7,7 @@ import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -56,5 +57,11 @@ public class PotController {
     public R collectPot(@RequestBody CollectPotDto collectPotDto) {
         potService.StartCollectPot(collectPotDto);
         return R.ok();
+    }
+
+    @PostMapping("searchPot")
+    @ApiOperation("查看指定蜜罐的时序数据")
+    public R searchPot(@RequestBody CollectPotDto collectPotDto) {
+        return R.data(potService.GetPotData(collectPotDto));
     }
 }

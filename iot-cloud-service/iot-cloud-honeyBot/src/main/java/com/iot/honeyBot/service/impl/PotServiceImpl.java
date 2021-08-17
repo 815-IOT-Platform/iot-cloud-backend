@@ -8,6 +8,7 @@ import com.iot.honeyBot.model.constants.Constants;
 import com.iot.honeyBot.model.constants.ProtocolType;
 import com.iot.honeyBot.model.crd.device.*;
 import com.iot.honeyBot.model.domain.FieldMetadata;
+import com.iot.honeyBot.model.domain.PotData;
 import com.iot.honeyBot.model.domain.TableMetadata;
 import com.iot.honeyBot.model.dto.CollectPotDto;
 import com.iot.honeyBot.model.vo.Honeypot;
@@ -103,6 +104,14 @@ public class PotServiceImpl implements PotService {
         fieldMetadata.add(new FieldMetadata("value", "NCHAR(2048)"));
         tableMetadata.setFields(fieldMetadata);
         tableMapper.createSTable(tableMetadata);
+    }
+
+    @Override
+    public List<PotData> GetPotData(CollectPotDto collectPotDto) {
+        TableMetadata tableMetadata = new TableMetadata();
+        tableMetadata.setDbname(collectPotDto.getNode());
+        tableMetadata.setTablename(collectPotDto.getProtocol().getProtocol());
+        return tableMapper.selectAll(tableMetadata);
     }
 
     private Honeypot formatToHoneypot (EdgeDevice edgeDevice) {

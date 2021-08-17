@@ -3,6 +3,11 @@
 
 <mapper namespace="com.iot.honeyBot.mapper.TableMapper">
 
+    <resultMap id="BaseResultMap" type="com.iot.honeyBot.model.domain.PotData">
+        <id column="ts" jdbcType="TIMESTAMP" property="ts" />
+        <result column="value" jdbcType="VARCHAR" property="value" />
+    </resultMap>
+
     <update id="createSTable" parameterType="com.iot.honeyBot.model.domain.TableMetadata">
         create table if not exists #{dbname}.#{tablename}
         <foreach collection="fields" item="field" index="index" open="(" close=")" separator=",">
@@ -17,5 +22,9 @@
     <update id="dropTable" parameterType="java.lang.String">
         drop #{tablename}
     </update>
+
+    <select id="selectAll" parameterType="com.iot.honeyBot.model.domain.TableMetadata" resultMap="BaseResultMap">
+        select * from #{dbname}.#{tablename} order by ts desc
+    </select>
 
 </mapper>
