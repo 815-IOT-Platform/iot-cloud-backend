@@ -100,7 +100,7 @@ public class PotServiceImpl implements PotService {
         tableMetadata.setTablename(collectPotDto.getProtocol().getProtocol());
         List<FieldMetadata> fieldMetadata = new ArrayList<>();
         fieldMetadata.add(new FieldMetadata("ts", "TIMESTAMP"));
-        fieldMetadata.add(new FieldMetadata("value", "NCHAR(255)"));
+        fieldMetadata.add(new FieldMetadata("value", "NCHAR(2048)"));
         tableMetadata.setFields(fieldMetadata);
         tableMapper.createSTable(tableMetadata);
     }
