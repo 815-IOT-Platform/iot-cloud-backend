@@ -53,18 +53,22 @@ public class PotServiceImpl implements PotService {
         NodeList nodeList = k8sClient.nodes().list();
         List<EdgeNodeVo> nodeVos = new ArrayList<>();
         for (Node node : nodeList.getItems()) {
-            EdgeNodeVo edgeNodeVo = new EdgeNodeVo();
-            edgeNodeVo.setNodeInfo(node.getStatus().getNodeInfo());
-            edgeNodeVo.setAddresses(node.getStatus().getAddresses());
-            edgeNodeVo.setAllocatable(node.getStatus().getAllocatable());
-            edgeNodeVo.setCapacity(node.getStatus().getCapacity());
-            edgeNodeVo.setName(node.getMetadata().getName());
-            if (!node.getStatus().getConditions().get(0).getStatus().equals("True")) {
-                edgeNodeVo.setStatus(NodeStatus.CRASHED);
-            } else {
-                edgeNodeVo.setStatus(NodeStatus.RUNNING);
+            if (node.getMetadata().getLabels().containsKey("node-role.kubernetes.io/edge")) {
+                EdgeNodeVo edgeNodeVo = new EdgeNodeVo();
+                edgeNodeVo.setNodeInfo(node.getStatus().getNodeInfo());
+                edgeNodeVo.setAddresses(node.getStatus().getAddresses());
+                edgeNodeVo.setAllocatable(node.getStatus().getAllocatable());
+                edgeNodeVo.setCapacity(node.getStatus().getCapacity());
+                edgeNodeVo.setName(node.getMetadata().getName());
+                if (!node.getStatus().getConditions().get(0).getStatus().equals("True")) {
+                    edgeNodeVo.setStatus(NodeStatus.CRASHED);
+                } else {
+                    edgeNodeVo.setStatus(NodeStatus.RUNNING);
+                }
+                List<Honeypot> honeypots = this.GetAllPotByNode(node.getMetadata().getName());
+                edgeNodeVo.setPotNumber(honeypots.size());
+                nodeVos.add(edgeNodeVo);
             }
-            nodeVos.add(edgeNodeVo);
         }
         return nodeVos;
     }

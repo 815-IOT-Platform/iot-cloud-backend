@@ -25,4 +25,6 @@ public class EdgeNodeVo implements Serializable {
     private NodeSystemInfo nodeInfo;
 
     private NodeStatus status;
+
+    private int potNumber;
 }
