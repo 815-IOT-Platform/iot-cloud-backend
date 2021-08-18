@@ -1,16 +1,16 @@
 package com.iot.honeyBot.service.impl;
 
-import com.iot.device.dto.EdgeDeviceDto;
-import com.iot.device.dto.EdgeDeviceTwinDto;
+
 import com.iot.honeyBot.mapper.DatabaseMapper;
 import com.iot.honeyBot.mapper.TableMapper;
-import com.iot.honeyBot.model.constants.Constants;
 import com.iot.honeyBot.model.constants.ProtocolType;
 import com.iot.honeyBot.model.crd.device.*;
 import com.iot.honeyBot.model.domain.FieldMetadata;
 import com.iot.honeyBot.model.domain.PotData;
+import com.iot.honeyBot.model.domain.SearchPotDo;
 import com.iot.honeyBot.model.domain.TableMetadata;
 import com.iot.honeyBot.model.dto.CollectPotDto;
+import com.iot.honeyBot.model.dto.SearchPotDto;
 import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
 import com.iot.honeyBot.util.K8sutil;
@@ -107,11 +107,12 @@ public class PotServiceImpl implements PotService {
     }
 
     @Override
-    public List<PotData> GetPotData(CollectPotDto collectPotDto) {
-        TableMetadata tableMetadata = new TableMetadata();
-        tableMetadata.setDbname(collectPotDto.getNode());
-        tableMetadata.setTablename(collectPotDto.getProtocol().getProtocol());
-        return tableMapper.selectAll(tableMetadata);
+    public List<PotData> GetPotData(SearchPotDto searchPotDto) {
+        SearchPotDo searchPotDo = new SearchPotDo();
+        searchPotDo.setStartTime(searchPotDto.getStartTime());
+        searchPotDo.setNode(searchPotDto.getNode());
+        searchPotDo.setProtocol(searchPotDto.getProtocol().getProtocol());
+        return tableMapper.selectAll(searchPotDo);
     }
 
     private Honeypot formatToHoneypot (EdgeDevice edgeDevice) {

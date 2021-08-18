@@ -1,9 +1,8 @@
 package com.iot.honeyBot.service;
 
-import com.iot.device.dto.EdgeDeviceDto;
-import com.iot.honeyBot.model.constants.ProtocolType;
 import com.iot.honeyBot.model.domain.PotData;
 import com.iot.honeyBot.model.dto.CollectPotDto;
+import com.iot.honeyBot.model.dto.SearchPotDto;
 import com.iot.honeyBot.model.vo.Honeypot;
 import io.fabric8.kubernetes.api.model.NodeList;
 
@@ -23,5 +22,5 @@ public interface PotService {
 
     void StartCollectPot(CollectPotDto collectPotDto);
 
-    List<PotData> GetPotData(CollectPotDto collectPotDto);
+    List<PotData> GetPotData(SearchPotDto searchPotDto);
 }

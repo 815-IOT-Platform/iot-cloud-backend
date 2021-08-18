@@ -23,8 +23,12 @@
         drop #{tablename}
     </update>
 
-    <select id="selectAll" parameterType="com.iot.honeyBot.model.domain.TableMetadata" resultMap="BaseResultMap">
-        select * from #{dbname}.#{tablename} order by ts desc
+    <select id="selectAll" parameterType="com.iot.honeyBot.model.domain.SearchPotDo" resultMap="BaseResultMap">
+        select * from #{node}.#{protocol}
+        <if test="startTime != null">
+            where ts &gt;= #{startTime}
+        </if>
+        order by ts desc
     </select>
 
 </mapper>

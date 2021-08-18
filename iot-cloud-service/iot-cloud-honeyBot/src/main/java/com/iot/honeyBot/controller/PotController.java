@@ -3,6 +3,7 @@ package com.iot.honeyBot.controller;
 
 import com.iot.common.core.domain.R;
 import com.iot.honeyBot.model.dto.CollectPotDto;
+import com.iot.honeyBot.model.dto.SearchPotDto;
 import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
 import io.swagger.annotations.Api;
@@ -61,7 +62,7 @@ public class PotController {
 
     @PostMapping("searchPot")
     @ApiOperation("查看指定蜜罐的时序数据")
-    public R searchPot(@RequestBody CollectPotDto collectPotDto) {
-        return R.data(potService.GetPotData(collectPotDto));
+    public R searchPot(@RequestBody SearchPotDto searchPotDto) {
+        return R.data(potService.GetPotData(searchPotDto));
     }
 }
