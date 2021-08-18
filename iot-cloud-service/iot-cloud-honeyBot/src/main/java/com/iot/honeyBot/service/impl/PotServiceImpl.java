@@ -54,23 +54,17 @@ public class PotServiceImpl implements PotService {
         List<EdgeNodeVo> nodeVos = new ArrayList<>();
         for (Node node : nodeList.getItems()) {
             if (node.getMetadata().getLabels().containsKey("node-role.kubernetes.io/edge")) {
-                EdgeNodeVo edgeNodeVo = new EdgeNodeVo();
-                edgeNodeVo.setNodeInfo(node.getStatus().getNodeInfo());
-                edgeNodeVo.setAddresses(node.getStatus().getAddresses());
-                edgeNodeVo.setAllocatable(node.getStatus().getAllocatable());
-                edgeNodeVo.setCapacity(node.getStatus().getCapacity());
-                edgeNodeVo.setName(node.getMetadata().getName());
-                if (!node.getStatus().getConditions().get(0).getStatus().equals("True")) {
-                    edgeNodeVo.setStatus(NodeStatus.CRASHED);
-                } else {
-                    edgeNodeVo.setStatus(NodeStatus.RUNNING);
-                }
-                List<Honeypot> honeypots = this.GetAllPotByNode(node.getMetadata().getName());
-                edgeNodeVo.setPotNumber(honeypots.size());
+                EdgeNodeVo edgeNodeVo = this.formatNode(node);
                 nodeVos.add(edgeNodeVo);
             }
         }
         return nodeVos;
+    }
+
+    @Override
+    public EdgeNodeVo GetNode(String nodeName) {
+        Node node = k8sClient.nodes().withName(nodeName).get();
+        return this.formatNode(node);
     }
 
     @Override
@@ -153,7 +147,7 @@ public class PotServiceImpl implements PotService {
             String desiredValue = twin.getDesired().getValue();
             switch (type) {
                 case "switch" :
-                    honeypot.setStatus(twin.getReported() == null ? "OFF" :  twin.getReported().getValue());
+                    honeypot.setStatus(desiredValue);
                     break;
                 case "protocol" :
                     honeypot.setProtocol(ProtocolType.valueOfName(desiredValue));
@@ -170,6 +164,23 @@ public class PotServiceImpl implements PotService {
                 .getMatchExpressions().get(0).getValues().get(0));
         honeypot.setDescription(edgeDevice.getMetadata().getLabels().get("description"));
         return honeypot;
+    }
+
+    private EdgeNodeVo formatNode(Node node) {
+        EdgeNodeVo edgeNodeVo = new EdgeNodeVo();
+        edgeNodeVo.setNodeInfo(node.getStatus().getNodeInfo());
+        edgeNodeVo.setAddresses(node.getStatus().getAddresses());
+        edgeNodeVo.setAllocatable(node.getStatus().getAllocatable());
+        edgeNodeVo.setCapacity(node.getStatus().getCapacity());
+        edgeNodeVo.setName(node.getMetadata().getName());
+        if (!node.getStatus().getConditions().get(0).getStatus().equals("True")) {
+            edgeNodeVo.setStatus(NodeStatus.CRASHED);
+        } else {
+            edgeNodeVo.setStatus(NodeStatus.RUNNING);
+        }
+        List<Honeypot> honeypots = this.GetAllPotByNode(node.getMetadata().getName());
+        edgeNodeVo.setPotNumber(honeypots.size());
+        return edgeNodeVo;
     }
 
     private void updatePodCR(String protocol, String port, String node, String potStatus, String labelKey, String labelValue, Map<String,Object> potMap) {

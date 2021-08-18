@@ -13,6 +13,8 @@ public interface PotService {
 
     List<EdgeNodeVo> GetAllEdgeNode();
 
+    EdgeNodeVo GetNode(String nodeName);
+
     List<Honeypot> GetAllPotByNode(String node);
 
     void CreatePot(Honeypot honeypot);
