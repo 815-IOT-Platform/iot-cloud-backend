@@ -3,6 +3,7 @@ package com.iot.honeyBot.service.impl;
 
 import com.iot.honeyBot.mapper.DatabaseMapper;
 import com.iot.honeyBot.mapper.TableMapper;
+import com.iot.honeyBot.model.constants.NodeStatus;
 import com.iot.honeyBot.model.constants.ProtocolType;
 import com.iot.honeyBot.model.crd.device.*;
 import com.iot.honeyBot.model.domain.FieldMetadata;
@@ -11,6 +12,7 @@ import com.iot.honeyBot.model.domain.SearchPotDo;
 import com.iot.honeyBot.model.domain.TableMetadata;
 import com.iot.honeyBot.model.dto.CollectPotDto;
 import com.iot.honeyBot.model.dto.SearchPotDto;
+import com.iot.honeyBot.model.vo.EdgeNodeVo;
 import com.iot.honeyBot.model.vo.Honeypot;
 import com.iot.honeyBot.service.PotService;
 import com.iot.honeyBot.util.K8sutil;
@@ -47,8 +49,24 @@ public class PotServiceImpl implements PotService {
     TableMapper tableMapper;
 
     @Override
-    public NodeList GetAllEdgeNode() {
-        return k8sClient.nodes().list();
+    public List<EdgeNodeVo> GetAllEdgeNode() {
+        NodeList nodeList = k8sClient.nodes().list();
+        List<EdgeNodeVo> nodeVos = new ArrayList<>();
+        for (Node node : nodeList.getItems()) {
+            EdgeNodeVo edgeNodeVo = new EdgeNodeVo();
+            edgeNodeVo.setNodeInfo(node.getStatus().getNodeInfo());
+            edgeNodeVo.setAddresses(node.getStatus().getAddresses());
+            edgeNodeVo.setAllocatable(node.getStatus().getAllocatable());
+            edgeNodeVo.setCapacity(node.getStatus().getCapacity());
+            edgeNodeVo.setName(node.getMetadata().getName());
+            if (!node.getStatus().getConditions().get(0).getStatus().equals("True")) {
+                edgeNodeVo.setStatus(NodeStatus.CRASHED);
+            } else {
+                edgeNodeVo.setStatus(NodeStatus.RUNNING);
+            }
+            nodeVos.add(edgeNodeVo);
+        }
+        return nodeVos;
     }
 
     @Override
