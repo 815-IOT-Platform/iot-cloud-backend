@@ -9,6 +9,8 @@ import java.io.Serializable;
 public class CollectPotDto implements Serializable {
     private static final long serialVersionUID = -2606657812440831527L;
 
+    private String potName;
+
     private ProtocolType protocol;
 
     private String node;

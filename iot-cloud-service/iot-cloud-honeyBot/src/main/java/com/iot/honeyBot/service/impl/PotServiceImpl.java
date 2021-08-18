@@ -70,7 +70,7 @@ public class PotServiceImpl implements PotService {
     public void CreatePot(Honeypot honeypot) {
         Map<String,Object> potMap = new HashMap<>();
         potMap.putAll(K8sutil.PotTemplate);
-        updatePodCR(honeypot.getProtocol().getProtocol(), honeypot.getPort(), honeypot.getNode(), honeypot.getStatus(), potMap);
+        updatePodCR(honeypot.getProtocol().getProtocol(), honeypot.getPort(), honeypot.getNode(), honeypot.getStatus(),"collected", "false", potMap);
         try {
             k8sClient.customResource(DeviceCRDContext).create("default",potMap);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class PotServiceImpl implements PotService {
     @Override
     public void UpdatePot(Honeypot honeypot) {
         Map<String,Object> potMap = k8sClient.customResource(DeviceCRDContext).get("default",honeypot.getName());
-        updatePodCR(null, honeypot.getPort(), null, honeypot.getStatus(), potMap);
+        updatePodCR(null, honeypot.getPort(), null, honeypot.getStatus(), "", "", potMap);
         try {
             k8sClient.customResource(DeviceCRDContext).createOrReplace("default",potMap);
         } catch (Exception e) {
@@ -104,6 +104,13 @@ public class PotServiceImpl implements PotService {
         fieldMetadata.add(new FieldMetadata("value", "NCHAR(2048)"));
         tableMetadata.setFields(fieldMetadata);
         tableMapper.createSTable(tableMetadata);
+        Map<String,Object> potMap = k8sClient.customResource(DeviceCRDContext).get("default",collectPotDto.getPotName());
+        this.updatePodCR("","","","", "collected", "true", potMap);
+        try {
+            k8sClient.customResource(DeviceCRDContext).createOrReplace("default",potMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -143,12 +150,18 @@ public class PotServiceImpl implements PotService {
         return honeypot;
     }
 
-    private void updatePodCR(String protocol, String port, String node, String potStatus, Map<String,Object> potMap) {
+    private void updatePodCR(String protocol, String port, String node, String potStatus, String labelKey, String labelValue, Map<String,Object> potMap) {
         Object metadata = potMap.get("metadata");
         if (metadata instanceof Map) {
             if (protocol != null && ! protocol.equals("")) {
                 ((Map) metadata).put("generateName", PotPrefix + Stash + protocol + Stash);
                 potMap.put("metadata", metadata);
+            }
+            if (!labelKey.equals("") && !labelValue.equals("")) {
+                Object labels = ((Map<?, ?>) metadata).get("labels");
+                if (labels instanceof Map) {
+                    ((Map<String, String>) labels).put(labelKey, labelValue);
+                }
             }
         }
         if (node != null && !node.equals("")) {
