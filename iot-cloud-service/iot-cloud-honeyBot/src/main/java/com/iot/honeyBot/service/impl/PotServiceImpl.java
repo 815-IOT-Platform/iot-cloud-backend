@@ -131,11 +131,27 @@ public class PotServiceImpl implements PotService {
 
     @Override
     public List<PotData> GetPotData(SearchPotDto searchPotDto) {
+        // get pot first
+        EdgeDevice edgeDevice = deviceClient.withName(searchPotDto.getName()).get();
         SearchPotDo searchPotDo = new SearchPotDo();
         searchPotDo.setStartTime(searchPotDto.getStartTime());
-        searchPotDo.setNode(searchPotDto.getNode());
-        searchPotDo.setProtocol(searchPotDto.getProtocol().getProtocol());
+        searchPotDo.setNode(edgeDevice.getSpec().getNodeSelector().getNodeSelectorTerms().get(0).getMatchExpressions().get(0).getValues().get(0));
+        for (DeviceTwin twin : edgeDevice.getStatus().getTwins()) {
+            if (twin.getPropertyName().equals("protocol")) {
+                searchPotDo.setProtocol(twin.getDesired().getValue());
+                break;
+            }
+        }
         return tableMapper.selectAll(searchPotDo);
+    }
+
+    @Override
+    public void DeletePot(String potName) {
+        try {
+            k8sClient.customResource(DeviceCRDContext).delete("default", potName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Honeypot formatToHoneypot (EdgeDevice edgeDevice) {

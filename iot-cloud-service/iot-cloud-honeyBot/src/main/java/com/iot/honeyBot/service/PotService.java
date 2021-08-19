@@ -5,7 +5,6 @@ import com.iot.honeyBot.model.dto.CollectPotDto;
 import com.iot.honeyBot.model.dto.SearchPotDto;
 import com.iot.honeyBot.model.vo.EdgeNodeVo;
 import com.iot.honeyBot.model.vo.Honeypot;
-import io.fabric8.kubernetes.api.model.NodeList;
 
 import java.util.List;
 
@@ -26,4 +25,6 @@ public interface PotService {
     void StartCollectPot(CollectPotDto collectPotDto);
 
     List<PotData> GetPotData(SearchPotDto searchPotDto);
+
+    void DeletePot(String potName);
 }

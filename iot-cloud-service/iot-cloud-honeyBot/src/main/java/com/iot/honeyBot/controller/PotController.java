@@ -52,6 +52,13 @@ public class PotController {
         return R.ok();
     }
 
+    @DeleteMapping("deletePot/{pot}")
+    @ApiOperation("删除蜜罐")
+    public R deletePot(@PathVariable String pot) {
+        potService.DeletePot(pot);
+        return R.ok();
+    }
+
     @PostMapping("collectNode/{node}")
     @ApiOperation("采集节点上的蜜罐数据")
     public R collectNode(@PathVariable String node) {
