@@ -20,4 +20,6 @@ public class Honeypot implements Serializable {
     private String port;
 
     private String description;
+
+    private int attackCnt;
 }

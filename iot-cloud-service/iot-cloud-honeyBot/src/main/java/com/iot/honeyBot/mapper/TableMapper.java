@@ -12,4 +12,6 @@ public interface TableMapper {
     boolean createSTable(TableMetadata tableMetadata);
 
     List<PotData> selectAll(SearchPotDo searchPotDo);
+
+    Integer selectCnt(SearchPotDo searchPotDo);
 }

@@ -31,4 +31,8 @@
         order by ts desc
     </select>
 
+    <select id="selectCnt" parameterType="com.iot.honeyBot.model.domain.SearchPotDo" resultType="java.lang.Integer">
+        select count(*) from #{node}.#{protocol}
+    </select>
+
 </mapper>

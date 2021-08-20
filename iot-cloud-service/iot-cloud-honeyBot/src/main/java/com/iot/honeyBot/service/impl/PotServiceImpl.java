@@ -179,6 +179,13 @@ public class PotServiceImpl implements PotService {
         honeypot.setNode(edgeDevice.getSpec().getNodeSelector().getNodeSelectorTerms().get(0)
                 .getMatchExpressions().get(0).getValues().get(0));
         honeypot.setDescription(edgeDevice.getMetadata().getLabels().get("description"));
+
+        // get attack cnt
+        SearchPotDo searchPotDo = new SearchPotDo();
+        searchPotDo.setNode(honeypot.getNode());
+        searchPotDo.setProtocol(honeypot.getProtocol().getProtocol());
+        Integer attachCnt = tableMapper.selectCnt(searchPotDo);
+        honeypot.setAttackCnt(attachCnt == null ? 0 : attachCnt);
         return honeypot;
     }
 
