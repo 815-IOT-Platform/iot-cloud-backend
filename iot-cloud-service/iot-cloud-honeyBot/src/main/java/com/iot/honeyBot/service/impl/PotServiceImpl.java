@@ -1,6 +1,7 @@
 package com.iot.honeyBot.service.impl;
 
 
+import com.iot.common.exception.BusinessException;
 import com.iot.honeyBot.mapper.DatabaseMapper;
 import com.iot.honeyBot.mapper.TableMapper;
 import com.iot.honeyBot.model.constants.NodeStatus;
@@ -84,9 +85,23 @@ public class PotServiceImpl implements PotService {
 
     @Override
     public void CreatePot(Honeypot honeypot) {
+        // create db
+        try {
+            databaseMapper.createDatabase(honeypot.getNode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException("create db failed");
+        }
+        // create table
+        try {
+            createPotTable(honeypot.getNode(), honeypot.getProtocol());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException("create table failed");
+        }
         Map<String,Object> potMap = new HashMap<>();
         potMap.putAll(K8sutil.PotTemplate);
-        updatePodCR(honeypot.getProtocol().getProtocol(), honeypot.getPort(), honeypot.getNode(), honeypot.getStatus(),"collected", "false", potMap);
+        updatePodCR(honeypot.getProtocol().getProtocol(), honeypot.getPort(), honeypot.getNode(), honeypot.getStatus(),"collected", "true", potMap);
         try {
             k8sClient.customResource(DeviceCRDContext).create("default",potMap);
         } catch (Exception e) {
@@ -112,14 +127,7 @@ public class PotServiceImpl implements PotService {
 
     @Override
     public void StartCollectPot(CollectPotDto collectPotDto) {
-        TableMetadata tableMetadata = new TableMetadata();
-        tableMetadata.setDbname(collectPotDto.getNode());
-        tableMetadata.setTablename(collectPotDto.getProtocol().getProtocol());
-        List<FieldMetadata> fieldMetadata = new ArrayList<>();
-        fieldMetadata.add(new FieldMetadata("ts", "TIMESTAMP"));
-        fieldMetadata.add(new FieldMetadata("value", "NCHAR(2048)"));
-        tableMetadata.setFields(fieldMetadata);
-        tableMapper.createSTable(tableMetadata);
+        createPotTable(collectPotDto.getNode(), collectPotDto.getProtocol());
         Map<String,Object> potMap = k8sClient.customResource(DeviceCRDContext).get("default",collectPotDto.getPotName());
         this.updatePodCR("","","","", "collected", "true", potMap);
         try {
@@ -127,6 +135,17 @@ public class PotServiceImpl implements PotService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void createPotTable(String node, ProtocolType protocol) {
+        TableMetadata tableMetadata = new TableMetadata();
+        tableMetadata.setDbname(node);
+        tableMetadata.setTablename(protocol.getProtocol());
+        List<FieldMetadata> fieldMetadata = new ArrayList<>();
+        fieldMetadata.add(new FieldMetadata("ts", "TIMESTAMP"));
+        fieldMetadata.add(new FieldMetadata("value", "NCHAR(2048)"));
+        tableMetadata.setFields(fieldMetadata);
+        tableMapper.createSTable(tableMetadata);
     }
 
     @Override
