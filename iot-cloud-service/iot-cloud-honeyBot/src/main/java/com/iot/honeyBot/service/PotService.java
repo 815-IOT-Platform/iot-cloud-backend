@@ -27,4 +27,6 @@ public interface PotService {
     List<PotData> GetPotData(SearchPotDto searchPotDto);
 
     void DeletePot(String potName);
+
+    List<PotData> GetAlarmData();
 }

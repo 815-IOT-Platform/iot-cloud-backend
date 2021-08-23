@@ -78,4 +78,10 @@ public class PotController {
     public R searchPot(@RequestBody SearchPotDto searchPotDto) {
         return R.data(potService.GetPotData(searchPotDto));
     }
+
+    @GetMapping("getAlarmData")
+    @ApiOperation("获取全部报警数据")
+    public R getAlarmData() {
+        return R.data(potService.GetAlarmData());
+    }
 }

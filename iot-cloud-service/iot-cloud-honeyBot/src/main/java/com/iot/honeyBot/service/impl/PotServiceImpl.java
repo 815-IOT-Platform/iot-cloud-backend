@@ -137,6 +137,11 @@ public class PotServiceImpl implements PotService {
         }
     }
 
+    @Override
+    public List<PotData> GetAlarmData() {
+        return tableMapper.getAlarmData();
+    }
+
     private void createPotTable(String node, ProtocolType protocol) {
         TableMetadata tableMetadata = new TableMetadata();
         tableMetadata.setDbname(node);

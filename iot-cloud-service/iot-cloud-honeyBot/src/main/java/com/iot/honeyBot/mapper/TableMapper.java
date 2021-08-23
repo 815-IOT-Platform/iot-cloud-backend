@@ -14,4 +14,6 @@ public interface TableMapper {
     List<PotData> selectAll(SearchPotDo searchPotDo);
 
     Integer selectCnt(SearchPotDo searchPotDo);
+
+    List<PotData> getAlarmData();
 }

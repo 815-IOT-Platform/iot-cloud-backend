@@ -35,4 +35,8 @@
         select count(*) from #{node}.#{protocol}
     </select>
 
+    <select id="getAlarmData" resultMap="BaseResultMap">
+        select * from honeypot.alarm order by ts desc
+    </select>
+
 </mapper>
