@@ -7,6 +7,7 @@ public enum ProtocolType {
     REDIS("redis"),
     HTTP("http"),
     HTTPS("https"),
+    SSH("ssh"),
     TELNET("telnet");
 
     private final String protocol;
