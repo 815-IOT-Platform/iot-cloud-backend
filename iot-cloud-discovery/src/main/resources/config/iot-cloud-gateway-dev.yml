@@ -14,7 +14,7 @@ spring:
   cloud:
     gateway:
       #白名单列表
-      whiteList: /auth/login,/auth/user/login,/auth/cas/client/validateLogin,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/ws/ws,/websocket/v2/api-docs,/system/auth/activeUser/*,/system/auth/register,/system/auth/registerCompany,/tpc/v2/api-docs,/device/v2/api-docs,/honeyBot/v2/api-docs
+      whiteList: /auth/login,/auth/user/login,/auth/cas/client/validateLogin,/user/register,/system/v2/api-docs,/imc/v2/api-docs,/ws/ws,/websocket/v2/api-docs,/system/auth/activeUser/*,/system/auth/register,/system/auth/registerCompany,/tpc/v2/api-docs,/device/v2/api-docs,/honeyBot/v2/api-docs,/honeyBot/web-terminal
       discovery:
         locator:
           enabled: true
